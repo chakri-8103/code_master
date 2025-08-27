@@ -124,7 +124,7 @@
 
     document.addEventListener("keydown", e => {
       const key = e.key;
-      const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "j", "J", "s", "S"];
+      const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "s", "S"];
       if (
         key === "F12" || key === "PrintScreen" ||
         (e.ctrlKey && blockedCtrl.includes(key)) ||
