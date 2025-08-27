@@ -1,0 +1,35 @@
+Wipro
+Q1. Find the least number which when divided by 12, 16, 18 leaves remainder 5 in each case.
+a) 144
+b) 145
+c) 149
+d) 150
+Answer: c) 149
+Explanation: Required number = LCM(12,16,18) + 5 = 144 + 5 = 149.
+
+Q2. A train 150 m long runs at 60 km/h. How much time will it take to cross a man walking at 6 km/h in the same direction?
+a) 5 sec
+b) 8 sec
+c) 10 sec
+d) 12 sec
+Answer: c) 10 sec
+Explanation: Relative speed = 60 − 6 = 54 km/h = 15 m/s. Time = 150/15 = 10 sec.
+
+TCS
+
+Q1. Choose the correctly spelled word:
+a) Accomodate
+b) Acommodate
+c) Accommodate
+d) Accomadate
+Answer: c) Accommodate
+Explanation: Correct spelling has double “c” and double “m”.
+
+Q2. Spot the error:
+“Neither of the two boys have done their homework.”
+a) Neither
+b) have
+c) done
+d) their
+Answer: b) have
+Explanation: Subject is singular ⇒ “has” not “have”.

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Code Master</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<style>
+  .title-section h1 {
+    font-weight: bold;
+    background: linear-gradient(90deg, #ff416c, #ff4b2b, #ff9933);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 2.5rem;
+  }
+  .title-section h6 {
+    color: #6c757d;
+    letter-spacing: 1px;
+    font-style: italic;
+  }
+  .fade-card {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .hidden {
+    opacity: 0;
+    transform: scale(0.98);
+    pointer-events: none;
+    position: absolute;
+  }
+  .visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    position: relative;
+  }
+  #topMessage {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body class="bg-light">
+
+<div class="container vh-100 d-flex flex-column justify-content-start align-items-center position-relative pt-5">
+
+  <!-- Offer Timer -->
+  <!-- Offer Timer -->
+<div class="alert alert-warning text-center w-100 mb-3" id="offerMessage">
+  🎉 Independence Day Special offer: <del>₹99</del> <b id="offerPrice">₹49</b>
+  <span id="countdown"></span>
+</div>
+
+
+  <!-- Top Thank You Message -->
+  <div id="topMessage" class="alert alert-success w-100 text-center d-none" role="alert">
+    🎉 Thank you! You are registered. Updates coming soon…
+  </div>
+
+  <!-- Title Section -->
+  <div class="text-center mb-4 title-section">
+    <h1>Code Master</h1>
+    <h6>Powered by cdavin</h6>
+  </div>
+
+  <!-- Welcome Card -->
+  <div id="welcomeCard" class="card shadow-lg p-4 fade-card visible" style="max-width: 650px; width: 100%;">
+    <h4 class="mb-3 text-primary fw-bold">Competition Details</h4>
+    <ul class="text-start">
+      <li>Total Rounds: 3 + 1 Final Round</li>
+      <li>1️⃣ Easy Round – 10 Questions – 20 mins</li>
+      <li>2️⃣ Medium Round – 10 Questions – 15 mins</li>
+      <li>3️⃣ Hard Round – 10 Questions – 10 mins</li>
+      <li>🏆 Final Round – 20 Questions – 20 mins</li>
+    </ul>
+    <p>📅 Every Sunday Exam & Monday Topics List</p>
+    <p>Registration is compulsory. Fee: <b>₹99</b></p>
+    <p>🎁 Top 1 to 30 students get Free Access in final round</p>
+    <p>⚠️ If score is below 60%, pay ₹49 to retake the same exam</p>
+    <button id="registerBtn" class="btn btn-primary mt-3 w-100" onclick="showRegister()">Register Now</button>
+  </div>
+
+  <!-- Register Card -->
+  <div id="registerCard" class="card shadow-lg p-4 fade-card hidden" style="max-width: 500px; width: 100%;">
+    <form id="cmForm">
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input id="name" type="text" class="form-control" placeholder="Enter your name" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Mobile Number</label>
+        <input id="mobile" type="tel" class="form-control" placeholder="10-digit mobile number" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input id="email" type="email" class="form-control" placeholder="Enter your email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">College</label>
+        <input id="college" type="text" class="form-control" placeholder="Enter your college name" required>
+      </div>
+      <button id="submitBtn" type="submit" class="btn btn-primary w-100">Proceed to Payment</button>
+      <button type="button" class="btn btn-secondary w-100 mt-2" onclick="showWelcome()">Back</button>
+    </form>
+  </div>
+
+  <!-- Payment Section -->
+  <div id="paymentCard" class="card shadow-lg p-4 fade-card hidden" style="max-width: 500px; width: 100%;">
+    <h5 class="text-success mb-3 text-center">Payment</h5>
+    <p><del class="text-muted">₹99</del> <span class="fw-bold text-success" id="paymentOfferPrice">Now only ₹49!</span></p>
+    <p>Scan QR below to pay:</p>
+    <div id="qrSection" class="d-flex justify-content-center mb-3">
+      <img src="phnpay.jpg" alt="Universal QR" class="img-fluid rounded shadow-sm p-3 bg-white" style="max-width:300px;">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Payment Method</label>
+      <select class="form-select" id="paymentMethod" required>
+        <option value="">Select Payment Method</option>
+        <option value="PhonePe">PhonePe</option>
+        <option value="Google Pay">Google Pay</option>
+        <option value="Paytm">Paytm</option>
+        <option value="Amazon Pay">Amazon Pay</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Transaction ID</label>
+      <input type="text" class="form-control" id="transactionId" placeholder="Enter transaction ID" required>
+    </div>
+    <button class="btn btn-primary w-100" onclick="submitPayment()">Submit Payment</button>
+  </div>
+
+</div>
+
+<script>
+  // Disable Inspect
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F12' || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key))) e.preventDefault();
+  });
+
+  // Offer Timer
+  const offerEnd = new Date("2025-08-16 05:49:00").getTime();
+  const offerPriceElem = document.getElementById("offerPrice");
+  const paymentOfferPriceElem = document.getElementById("paymentOfferPrice");
+  const countdownElem = document.getElementById("countdown");
+  const registerBtn = document.getElementById("registerBtn");
+
+  function updateOffer() {
+    const now = new Date().getTime();
+    const distance = offerEnd - now;
+
+    if (distance <= 0) {
+      offerPriceElem.textContent = "₹99";
+      paymentOfferPriceElem.textContent = "₹99";
+      countdownElem.textContent = " Offer expired";
+      return;
+    }
+
+    const days = Math.floor(distance / (1000*60*60*24));
+    const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+    const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+    const seconds = Math.floor((distance % (1000*60)) / 1000);
+
+    countdownElem.textContent = ` | Offer ends in ${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  const timerInterval = setInterval(updateOffer, 1000);
+  updateOffer();
+
+  // Card Navigation
+  function showRegister(){
+    document.getElementById('welcomeCard').classList.replace('visible','hidden');
+    document.getElementById('registerCard').classList.replace('hidden','visible');
+  }
+  function showWelcome(){
+    document.getElementById('registerCard').classList.replace('visible','hidden');
+    document.getElementById('welcomeCard').classList.replace('hidden','visible');
+  }
+  function showPayment(){
+    document.getElementById('registerCard').classList.replace('visible','hidden');
+    document.getElementById('paymentCard').classList.replace('hidden','visible');
+  }
+
+  // Google Form config
+  const GF_CONFIG = {
+    action: "https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse",
+    fields: {
+      name: "entry.1111111111",
+      mobile: "entry.2222222222",
+      email: "entry.3333333333",
+      college: "entry.4444444444",
+      paymentMethod: "entry.5555555555",
+      transactionId: "entry.6666666666"
+    }
+  };
+
+  // Registration form
+  document.getElementById('cmForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const college = document.getElementById('college').value.trim();
+    if(!name||!mobile||!email||!college){ alert("Fill all fields"); return;}
+    if(!/^\d{10}$/.test(mobile)){ alert("Enter valid 10-digit mobile number"); return;}
+
+    localStorage.setItem('name', name);
+    localStorage.setItem('mobile', mobile);
+    localStorage.setItem('email', email);
+    localStorage.setItem('college', college);
+
+    showPayment();
+  });
+
+  function submitPayment(){
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const transactionId = document.getElementById('transactionId').value.trim();
+    if(!paymentMethod||!transactionId){ alert("Fill all fields"); return;}
+
+    localStorage.setItem("paymentSubmitted","true");
+    localStorage.setItem("paymentMethod", paymentMethod);
+    localStorage.setItem("transactionId", transactionId);
+    localStorage.setItem("showThankYouMessage","true");
+
+    const fd = new FormData();
+    fd.append(GF_CONFIG.fields.name, localStorage.getItem('name'));
+    fd.append(GF_CONFIG.fields.mobile, localStorage.getItem('mobile'));
+    fd.append(GF_CONFIG.fields.email, localStorage.getItem('email'));
+    fd.append(GF_CONFIG.fields.college, localStorage.getItem('college'));
+    fd.append(GF_CONFIG.fields.paymentMethod, paymentMethod);
+    fd.append(GF_CONFIG.fields.transactionId, transactionId);
+
+    fetch(GF_CONFIG.action, { method:"POST", mode:"no-cors", body:fd })
+      .finally(()=>{
+        document.getElementById('paymentCard').classList.replace('visible','hidden');
+        document.getElementById('welcomeCard').classList.replace('hidden','visible');
+        document.getElementById('topMessage').classList.remove('d-none');
+        document.getElementById('registerBtn').disabled = true;
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    if(localStorage.getItem("showThankYouMessage")==="true"){
+      document.getElementById("topMessage").classList.remove("d-none");
+      document.getElementById('registerBtn').disabled = true;
+      localStorage.removeItem("showThankYouMessage");
+    }
+  });
+</script>
+</body>
+</html>
