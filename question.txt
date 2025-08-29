@@ -1,4 +1,4 @@
-Wipro
+WIPRO - Quantitative Aptitude
 Q1. Find the least number which when divided by 12, 16, 18 leaves remainder 5 in each case.
 a) 144
 b) 145
@@ -15,21 +15,232 @@ d) 12 sec
 Answer: c) 10 sec
 Explanation: Relative speed = 60 − 6 = 54 km/h = 15 m/s. Time = 150/15 = 10 sec.
 
-TCS
+Q3. A can finish a work in 10 days, B in 15 days. They work together for 5 days, then A leaves. In how many more days will B finish the work?
+a) 2 days
+b) 2.5 days
+c) 3 days
+d) 4 days
+Answer: b) 2.5 days
+Explanation: In 5 days together, work done = 5 × (1/10 + 1/15) = 5/6. Remaining = 1/6. B’s rate = 1/15. Time = (1/6)/(1/15) = 2.5 days.
 
-Q1. Choose the correctly spelled word:
-a) Accomodate
-b) Acommodate
-c) Accommodate
-d) Accomadate
-Answer: c) Accommodate
-Explanation: Correct spelling has double “c” and double “m”.
+Q4. The ratio of ages of A and B is 4:5. After 5 years, the ratio will be 5:6. Find their present ages.
+a) 16, 20
+b) 20, 25
+c) 24, 30
+d) 28, 35
+Answer: b) 20, 25
+Explanation: Let ages = 4x, 5x. (4x+5)/(5x+5) = 5/6 ⇒ x=5. So, A=20, B=25.
 
-Q2. Spot the error:
-“Neither of the two boys have done their homework.”
+Q5. A sum of ₹5,000 is invested at 12% simple interest per annum. Find the interest earned in 3 years.
+a) ₹1,200
+b) ₹1,500
+c) ₹1,800
+d) ₹2,000
+Answer: c) ₹1,800
+Explanation: SI = (P×R×T)/100 = (5000×12×3)/100 = 1800.
+
+Q6. If the probability of winning a game is 0.4, find the probability of losing.
+a) 0.2
+b) 0.4
+c) 0.5
+d) 0.6
+Answer: d) 0.6
+Explanation: P(losing) = 1 − 0.4 = 0.6.
+
+Q7. The price of a watch is increased by 20% and then decreased by 10%. What is the net % change?
+a) 6% increase
+b) 8% increase
+c) 10% increase
+d) 12% increase
+Answer: b) 8% increase
+Explanation: Net effect = (1.20 × 0.90 − 1) × 100% = 1.08 − 1 = +8%.
+
+Q8. If 3 pens cost ₹18, how many pens can be bought for ₹120?
+a) 18
+b) 20
+c) 22
+d) 24
+Answer: b) 20
+Explanation: Cost per pen = 18/3 = ₹6. Total pens = 120/6 = 20.
+
+Q9. A boat takes 2 hours to travel 40 km downstream, and 4 hours upstream for the same distance. Find the speed of boat in still water.
+a) 12 km/h
+b) 14 km/h
+c) 15 km/h
+d) 16 km/h
+Answer: c) 15 km/h
+Explanation: Downstream speed=40/2=20, Upstream=40/4=10. Boat speed = (20+10)/2=15.
+
+Q10. A box contains 3 red, 4 blue, and 5 green balls. If one ball is drawn at random, find the probability it is not green.
+a) 3/12
+b) 4/12
+c) 7/12
+d) 5/12
+Answer: c) 7/12
+Explanation: Total balls=12. Non-green=7. P=7/12.
+
+WIPRO - Logical Reasoning
+Q1. If A + B means A is the brother of B, A – B means A is the mother of B, A × B means A is the sister of B, then what does “P – Q + R” mean?
+a) P is mother of Q and Q brother of R
+b) P is sister of R
+c) P is aunt of R
+d) P is grandmother of R
+Answer: a) P is mother of Q and Q brother of R
+Explanation: P−Q ⇒ P mother of Q. Q+R ⇒ Q brother of R.
+
+Q2. Find the next term: 3, 8, 15, 24, 35, ?
+a) 45
+b) 46
+c) 47
+d) 48
+Answer: d) 48
+Explanation: Differences=5,7,9,11. Next=13 ⇒ 35+13=48.
+
+Q3. In a certain code, CAT = DBU, DOG = EPH. Then BAT = ?
+a) BBU
+b) CBU
+c) DBV
+d) CAV
+Answer: b) CBU
+Explanation: Each letter +1 ⇒ BAT → CBU.
+
+Q4. Five friends are sitting in a circle facing the center. A is to the right of B, C is between A and D, E is not next to A. Who is opposite B?
+a) A
+b) C
+c) D
+d) E
+Answer: b) C
+Explanation: Order: B, A, C, D, E. Opposite B is C.
+
+Q5. Statement: All engineers are hard-working. Some hard-working people are careless.
+Conclusions:
+(i) Some engineers are careless.
+(ii) No engineer is careless.
+a) Only (i) follows
+b) Only (ii) follows
+c) Both follow
+d) Neither follows
+Answer: d) Neither follows
+Explanation: Given info doesn’t connect engineers directly to careless people.
+
+Q6. Find the odd one: Square, Triangle, Pentagon, Circle.
+a) Square
+b) Triangle
+c) Pentagon
+d) Circle
+Answer: d) Circle
+Explanation: All others are polygons; circle is not.
+
+Q7. Arrange: 3, 5, 8, 13, 21, ?
+a) 28
+b) 29
+c) 31
+d) 34
+Answer: d) 34
+Explanation: Fibonacci series: 13+21=34.
+
+Q8. Pointing to a man in a photograph, Ramesh said: “He is my wife’s father’s only son.” How is the man related to Ramesh?
+a) Father
+b) Brother-in-law
+c) Brother
+d) Cousin
+Answer: b) Brother-in-law
+Explanation: Wife’s father’s only son = wife’s brother.
+
+Q9. If “EARTH” is coded as “GCVJX”, then “MOON” = ?
+a) NPPO
+b) OQQP
+c) PQPR
+d) LNNQ
+Answer: b) OQQP
+Explanation: Each letter shifted +2: M→O, O→Q, N→P.
+
+Q10. A is older than B but younger than C. D is younger than B but older than E. Who is the youngest?
+a) A
+b) B
+c) D
+d) E
+Answer: d) E
+Explanation: Order: C > A > B > D > E. Youngest = E.
+
+WIPRO - Verbal Ability
+Q1. Synonym of “Eloquent”:
+a) Silent
+b) Fluent
+c) Slow
+d) Harsh
+Answer: b) Fluent
+Explanation: “Eloquent” means persuasive, fluent in speaking.
+
+Q2. Antonym of “Transparent”:
+a) Clear
+b) Opaque
+c) Bright
+d) Glassy
+Answer: b) Opaque
+Explanation: Opaque = not transparent.
+
+Q3. Fill in the blank:
+If I ____ a bird, I would fly.
+a) was
+b) am
+c) were
+d) will
+Answer: c) were
+Explanation: Subjunctive mood for unreal condition → “If I were”.
+
+Q4. Identify the error:
+“He do not like chocolates.”
+a) He
+b) do
+c) not
+d) like
+Answer: b) do
+Explanation: Singular subject → “He does not like…”
+
+Q5. Change to passive:
+“She is writing a letter.”
+a) She is written a letter.
+b) A letter is written by her.
+c) A letter is being written by her.
+d) A letter has been written by her.
+Answer: c) A letter is being written by her.
+Explanation: Present continuous passive form.
+
+Q6. Reading comprehension type Qs (general guideline):
+a) Title → central subject in 3–5 words
+b) Main idea → from intro/conclusion lines
+c) Tone → neutral/critical/optimistic etc.
+d) Factual Qs → answer directly from passage.
+
+Q7. Rearrange: is / the best / honesty / policy.
+a) Honesty the best policy is
+b) Policy honesty is the best
+c) The best policy is honesty
+d) Honesty is the best policy
+Answer: d) Honesty is the best policy.
+Explanation: Correct word order.
+
+Q8. One word substitution: “One who knows many languages.”
+a) Philanthropist
+b) Polyglot
+c) Linguist
+d) Bilingual
+Answer: b) Polyglot
+Explanation: Polyglot = person who knows several languages.
+
+Q9. Spot the error: “Neither of the two boys have done their homework.”
 a) Neither
 b) have
 c) done
 d) their
 Answer: b) have
 Explanation: Subject is singular ⇒ “has” not “have”.
+
+Q10. Choose the correctly spelled word:
+a) Accomodate
+b) Acommodate
+c) Accommodate
+d) Accomadate
+Answer: c) Accommodate
+Explanation: Correct spelling has double “c” and double “m”.
