@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>tycoon Master Pro</title>
+  <title>Code Master Pro</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
@@ -289,8 +289,8 @@
         reasonEl.style.display = "none";
       }
 
-      if (finalData.video) {
-        document.getElementById("recordedVideo").src = finalData.video;
+      if (finalData.recordingURL) {
+        document.getElementById("recordedVideo").src = finalData.recordingURL;
       }
 
       document.getElementById("resultArea").classList.remove("d-none");
@@ -306,21 +306,19 @@
       }
     }
 
-    function stopRecordingAndGetBase64() {
+    function stopRecordingAndGetURL() {
       return new Promise((resolve) => {
         if (!mediaRecorder || mediaRecorder.state === "inactive") {
           return resolve("");
         }
         mediaRecorder.onstop = () => {
           const blob = new Blob(recordedChunks, { type: "video/webm" });
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result); // base64 string
-          reader.readAsDataURL(blob);
+          const url = URL.createObjectURL(blob);
+          resolve(url);
         };
         try { mediaRecorder.stop(); } catch (e) { resolve(""); }
       });
     }
-
 
     async function gradeExam(reason = "") {
       if (submitted) return;
@@ -345,7 +343,7 @@
         `;
       });
 
-      const base64Video = await stopRecordingAndGetBase64();
+      const recordingURL = await stopRecordingAndGetURL();
 
       const finalData = {
         fullname: student.fullName,
@@ -356,14 +354,12 @@
         completed: "Yes",
         explanations: explanationsHTML,
         reason: reason,
-        recordingURL: recordingURL || "",
-        video: base64Video || ""
-
+        recordingURL: recordingURL || ""
       };
 
       // ---- Send to backend ----
       try {
-        await fetch("https://262a0a8be2a0.ngrok-free.app/submitExam", {
+        await fetch("https://18a288fb6920.ngrok-free.app/submitExam", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(finalData)
@@ -424,5 +420,4 @@
     markCompletedCompanies();
   </script>
 </body>
-
 </html>
