@@ -55,7 +55,6 @@
       <p class="text-muted">Answer all questions carefully</p>
     </div>
 
-    <!-- Student Info -->
     <form id="infoForm" autocomplete="off">
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">Full Name</label>
@@ -78,11 +77,9 @@
       <div class="submit-btn">
         <button type="submit" class="btn btn-primary btn-lg">Start Exam</button>
       </div>
-      <!-- Completed companies list -->
       <div id="completedList" class="mt-4"></div>
     </form>
 
-    <!-- Exam Form -->
     <form id="examForm" class="d-none" autocomplete="off">
       <video id="videoPreview" autoplay muted></video>
       <div id="questionsArea"></div>
@@ -91,7 +88,6 @@
       </div>
     </form>
 
-    <!-- Results -->
     <div id="resultArea" class="result-card d-none">
       <div class="card p-4 shadow-sm">
         <h4 class="fw-bold">Exam Result</h4>
@@ -115,43 +111,29 @@
   </div>
 
   <script>
-    // ======================= Anti-cheat restrictions =======================
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("selectstart", e => e.preventDefault());
-    ["copy", "paste", "cut"].forEach(evt =>
-      document.addEventListener(evt, e => e.preventDefault())
-    );
-
+    ["copy", "paste", "cut"].forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
     document.addEventListener("keydown", e => {
       const key = e.key;
       const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "s", "S"];
-      if (
-        key === "F12" || key === "PrintScreen" ||
-        (e.ctrlKey && blockedCtrl.includes(key)) ||
-        (e.ctrlKey && e.shiftKey && (key === "i" || key === "I"))
-      ) {
+      if (key === "F12" || key === "PrintScreen" || (e.ctrlKey && blockedCtrl.includes(key)) || (e.ctrlKey && e.shiftKey && (key === "i" || key === "I"))) {
         e.preventDefault();
         alert("⚠️ This action is disabled during the exam!");
       }
     });
+    document.addEventListener("keyup", e => { if (e.key === "PrintScreen") { navigator.clipboard.writeText(""); alert("⚠️ Screenshots are disabled during the exam!"); } });
 
-    document.addEventListener("keyup", e => {
-      if (e.key === "PrintScreen") {
-        navigator.clipboard.writeText("");
-        alert("⚠️ Screenshots are disabled during the exam!");
-      }
-    });
-
-    // ======================= Exam logic =======================
     let questionsData = {};
     let submitted = false;
     let mediaRecorder;
     let recordedChunks = [];
-
     let student = { fullName: "", succode: "", college: "", company: "" };
 
     const companies = [
-      "WIPRO - Quantitative Aptitude", "WIPRO - Verbal Ability", "WIPRO - Logical Reasoning"
+      "WIPRO - Quantitative Aptitude",
+      "WIPRO - Verbal Ability",
+      "WIPRO - Logical Reasoning"
     ];
 
     function saveResult(data) {
@@ -160,27 +142,19 @@
       results.push(data);
       localStorage.setItem("examResults", JSON.stringify(results));
     }
-
     function getResult(company) {
       let results = JSON.parse(localStorage.getItem("examResults") || "[]");
       return results.find(r => r.company === company);
     }
-
     function saveCompletedCompany(company) {
       let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
-      if (!completed.includes(company)) {
-        completed.push(company);
-        localStorage.setItem("completedCompanies", JSON.stringify(completed));
-      }
+      if (!completed.includes(company)) { completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); }
     }
-
     function markCompletedCompanies() {
       let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
       const listDiv = document.getElementById("completedList");
       if (completed.length > 0) {
-        listDiv.innerHTML = "<h6>✅ Completed Tests</h6><ul class='list-group'>" +
-          completed.map(c => `<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("") +
-          "</ul>";
+        listDiv.innerHTML = "<h6>✅ Completed Tests</h6><ul class='list-group'>" + completed.map(c => `<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("") + "</ul>";
         document.querySelectorAll(".completed-item").forEach(item => {
           item.addEventListener("click", () => {
             const comp = item.getAttribute("data-company");
@@ -188,72 +162,44 @@
             if (res) showResult(res, false);
           });
         });
-      } else {
-        listDiv.innerHTML = "";
-      }
+      } else { listDiv.innerHTML = ""; }
       const companySelect = document.getElementById("companySelect");
-      [...companySelect.options].forEach(opt => {
-        if (completed.includes(opt.value)) opt.remove();
-      });
+      [...companySelect.options].forEach(opt => { if (completed.includes(opt.value)) opt.remove(); });
     }
 
     async function loadQuestions() {
-      const response = await fetch("question.txt");
-      const lines = (await response.text()).split("\n").map(l => l.trim());
-
-      let currentCompany = "";
-      let qObj = null;
-
-      lines.forEach(line => {
-        if (!line) return;
-        if (companies.includes(line)) {
-          currentCompany = line;
-          if (!questionsData[currentCompany]) questionsData[currentCompany] = [];
-          qObj = null;
-          return;
-        }
-        if (line.startsWith("Q")) {
-          qObj = { question: line, options: [], answer: "", explanation: "" };
-          questionsData[currentCompany].push(qObj);
-          return;
-        }
-        if (qObj && qObj.options.length < 4 &&
-          !line.startsWith("Answer:") &&
-          !line.startsWith("Explanation:")) {
-          qObj.options.push(line);
-          return;
-        }
-        if (line.startsWith("Answer:")) {
-          qObj.answer = line.replace("Answer:", "").trim();
-          return;
-        }
-        if (line.startsWith("Explanation:")) {
-          qObj.explanation = line.replace("Explanation:", "").trim();
-          return;
-        }
-      });
-
-      const completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
+      try {
+        const response = await fetch("question.txt");
+        const text = await response.text();
+        const lines = text.split("\n").map(l => l.trim());
+        let currentCompany = "", qObj = null;
+        lines.forEach(line => {
+          if (!line) return;
+          if (companies.includes(line)) { currentCompany = line; if (!questionsData[currentCompany]) questionsData[currentCompany] = []; qObj = null; return; }
+          if (line.startsWith("Q")) { qObj = { question: line, options: [], answer: "", explanation: "" }; questionsData[currentCompany].push(qObj); return; }
+          if (qObj && qObj.options.length < 4 && !line.startsWith("Answer:") && !line.startsWith("Explanation:")) { qObj.options.push(line); return; }
+          if (line.startsWith("Answer:")) { qObj.answer = line.replace("Answer:", "").trim(); return; }
+          if (line.startsWith("Explanation:")) { qObj.explanation = line.replace("Explanation:", "").trim(); return; }
+        });
+      } catch (e) {
+        console.warn("question.txt not found or failed to load. You can still use the test UI.");
+      }
       const companySelect = document.getElementById("companySelect");
       companies.forEach(company => {
-        if (!completed.includes(company)) {
-          const opt = document.createElement("option");
-          opt.value = company;
-          opt.textContent = company;
-          companySelect.appendChild(opt);
-        }
+        const opt = document.createElement("option");
+        opt.value = company;
+        opt.textContent = company;
+        companySelect.appendChild(opt);
       });
     }
 
     function renderQuestions(company) {
       const questionsArea = document.getElementById("questionsArea");
       questionsArea.innerHTML = "";
-
       if (!company || !questionsData[company] || questionsData[company].length === 0) {
         questionsArea.innerHTML = `<div class="alert alert-warning">No questions available for ${company}. Updated Soon.</div>`;
         return;
       }
-
       questionsData[company].forEach((q, index) => {
         const card = document.createElement("div");
         card.className = "card question-card p-3 shadow-sm";
@@ -269,9 +215,7 @@
       });
     }
 
-    function eq(a, b) {
-      return String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
-    }
+    function eq(a, b) { return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase(); }
 
     function showResult(finalData, save = true) {
       document.getElementById("resName").textContent = finalData.fullname;
@@ -280,41 +224,25 @@
       document.getElementById("resMarks").textContent = finalData.marks;
       document.getElementById("resStatus").textContent = "Completed";
       document.getElementById("resExplanations").innerHTML = finalData.explanations || "";
-
       const reasonEl = document.getElementById("resReason");
-      if (finalData.reason) {
-        reasonEl.textContent = `Auto-submitted: ${finalData.reason}`;
-        reasonEl.style.display = "block";
-      } else {
-        reasonEl.style.display = "none";
-      }
-
-      if (finalData.recordingURL) {
-        document.getElementById("recordedVideo").src = finalData.recordingURL;
-      }
-
+      if (finalData.reason) { reasonEl.textContent = `Auto-submitted: ${finalData.reason}`; reasonEl.style.display = "block"; } else reasonEl.style.display = "none";
+      const recordedEl = document.getElementById("recordedVideo");
+      recordedEl.src = finalData.recordingURL || finalData.video || "";
       document.getElementById("resultArea").classList.remove("d-none");
       document.getElementById("infoForm").classList.add("d-none");
       document.getElementById("examForm").classList.add("d-none");
-
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-
-      if (save) {
-        saveResult(finalData);
-        saveCompletedCompany(finalData.company);
-        markCompletedCompanies();
-      }
+      if (save) { saveResult(finalData); saveCompletedCompany(finalData.company); markCompletedCompanies(); }
     }
 
-    function stopRecordingAndGetURL() {
+    function stopRecordingAndGetBase64() {
       return new Promise((resolve) => {
-        if (!mediaRecorder || mediaRecorder.state === "inactive") {
-          return resolve("");
-        }
+        if (!mediaRecorder || mediaRecorder.state === "inactive") return resolve("");
         mediaRecorder.onstop = () => {
           const blob = new Blob(recordedChunks, { type: "video/webm" });
-          const url = URL.createObjectURL(blob);
-          resolve(url);
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
         };
         try { mediaRecorder.stop(); } catch (e) { resolve(""); }
       });
@@ -323,27 +251,31 @@
     async function gradeExam(reason = "") {
       if (submitted) return;
       submitted = true;
-
       if (!questionsData[student.company]) return;
-
       let correct = 0;
       let explanationsHTML = "";
-
       questionsData[student.company].forEach((q, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        if (selected && eq(selected.value, q.answer)) {
-          correct++;
-        }
+        if (selected && eq(selected.value, q.answer)) correct++;
         explanationsHTML += `
           <div class="card mb-2 p-2">
             <p><b>${q.question}</b></p>
             <p>✅ Correct Answer: ${q.answer}</p>
             <p>ℹ️ Explanation: ${q.explanation}</p>
-          </div>
-        `;
+          </div>`;
       });
 
-      const recordingURL = await stopRecordingAndGetURL();
+      const videoBase64 = await stopRecordingAndGetBase64();
+
+      let recordingURL = "";
+      if (videoBase64) {
+        const byteString = atob(videoBase64.split(",")[1]);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+        const blob = new Blob([ab], { type: "video/webm" });
+        recordingURL = URL.createObjectURL(blob);
+      }
 
       const finalData = {
         fullname: student.fullName,
@@ -354,20 +286,26 @@
         completed: "Yes",
         explanations: explanationsHTML,
         reason: reason,
-        recordingURL: recordingURL || ""
+        video: videoBase64 || ""
       };
 
-      // ---- Send to backend ----
       try {
-        await fetch("https://18a288fb6920.ngrok-free.app/submitExam", {
+        const resp = await fetch("https://e4df9110a398.ngrok-free.app/submitExam", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(finalData)
         });
+        const json = await resp.json();
+        if (json && json.success && json.id) {
+          finalData.id = json.id;
+        } else {
+          console.warn("Backend responded without id:", json);
+        }
       } catch (err) {
         console.error("Error sending to backend:", err);
       }
 
+      finalData.recordingURL = recordingURL;
       showResult(finalData, true);
     }
 
@@ -377,10 +315,7 @@
       student.succode = document.getElementById("succode").value;
       student.college = document.getElementById("college").value;
       student.company = document.getElementById("companySelect").value;
-      if (!student.company) {
-        alert("Please select a company");
-        return;
-      }
+      if (!student.company) { alert("Please select a company"); return; }
       document.getElementById("infoForm").classList.add("d-none");
       document.getElementById("examForm").classList.remove("d-none");
       renderQuestions(student.company);
@@ -397,27 +332,15 @@
       }
     });
 
-    document.getElementById("examForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      gradeExam("");
-    });
+    document.getElementById("examForm").addEventListener("submit", function (e) { e.preventDefault(); gradeExam(""); });
 
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden && !submitted) {
-        gradeExam("Tab/window change detected.");
-      }
-    });
+    document.addEventListener("visibilitychange", () => { if (document.hidden && !submitted) gradeExam("Tab/window change detected."); });
 
-    document.getElementById("homeBtn").addEventListener("click", () => {
-      document.getElementById("resultArea").classList.add("d-none");
-      document.getElementById("infoForm").classList.remove("d-none");
-      document.getElementById("examForm").classList.add("d-none");
-      submitted = false;
-      markCompletedCompanies();
-    });
+    document.getElementById("homeBtn").addEventListener("click", () => { document.getElementById("resultArea").classList.add("d-none"); document.getElementById("infoForm").classList.remove("d-none"); document.getElementById("examForm").classList.add("d-none"); submitted = false; markCompletedCompanies(); });
 
     loadQuestions();
     markCompletedCompanies();
   </script>
 </body>
+
 </html>
