@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code Master Exam</title>
+  <title>Code Master Pro</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
@@ -135,7 +135,6 @@
       }
     });
 
-    // Disable print screen via keyup trick (blank clipboard)
     document.addEventListener("keyup", e => {
       if (e.key === "PrintScreen") {
         navigator.clipboard.writeText("");
@@ -152,10 +151,9 @@
     let student = { fullName: "", succode: "", college: "", company: "" };
 
     const companies = [
-     "WIPRO - Quantitative Aptitude","WIPRO - Verbal Ability","WIPRO - Logical Reasoning"
+      "WIPRO - Quantitative Aptitude", "WIPRO - Verbal Ability", "WIPRO - Logical Reasoning"
     ];
 
-    // ---- LocalStorage helpers ----
     function saveResult(data) {
       let results = JSON.parse(localStorage.getItem("examResults") || "[]");
       results = results.filter(r => r.company !== data.company);
@@ -199,7 +197,6 @@
       });
     }
 
-    // ---- Load questions ----
     async function loadQuestions() {
       const response = await fetch("question.txt");
       const lines = (await response.text()).split("\n").map(l => l.trim());
@@ -248,7 +245,6 @@
       });
     }
 
-    // ---- Render questions ----
     function renderQuestions(company) {
       const questionsArea = document.getElementById("questionsArea");
       questionsArea.innerHTML = "";
@@ -277,7 +273,6 @@
       return String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
     }
 
-    // ---- Show result ----
     function showResult(finalData, save = true) {
       document.getElementById("resName").textContent = finalData.fullname;
       document.getElementById("resSuccode").textContent = finalData.succode;
@@ -353,6 +348,7 @@
       const finalData = {
         fullname: student.fullName,
         succode: student.succode,
+        college: student.college,
         company: student.company,
         marks: `${correct} / ${questionsData[student.company].length}`,
         completed: "Yes",
@@ -361,10 +357,20 @@
         recordingURL: recordingURL || ""
       };
 
+      // ---- Send to backend ----
+      try {
+        await fetch("https://18a288fb6920.ngrok-free.app/submitExam", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(finalData)
+        });
+      } catch (err) {
+        console.error("Error sending to backend:", err);
+      }
+
       showResult(finalData, true);
     }
 
-    // ---- Start exam ----
     document.getElementById("infoForm").addEventListener("submit", async e => {
       e.preventDefault();
       student.fullName = document.getElementById("fullName").value;
@@ -391,20 +397,17 @@
       }
     });
 
-    // Manual submit
     document.getElementById("examForm").addEventListener("submit", function (e) {
       e.preventDefault();
       gradeExam("");
     });
 
-    // Auto-submit if user leaves tab/window
     document.addEventListener("visibilitychange", () => {
       if (document.hidden && !submitted) {
         gradeExam("Tab/window change detected.");
       }
     });
 
-    // Home button
     document.getElementById("homeBtn").addEventListener("click", () => {
       document.getElementById("resultArea").classList.add("d-none");
       document.getElementById("infoForm").classList.remove("d-none");
@@ -413,7 +416,6 @@
       markCompletedCompanies();
     });
 
-    // Init
     loadQuestions();
     markCompletedCompanies();
   </script>
