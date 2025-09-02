@@ -289,8 +289,8 @@
         reasonEl.style.display = "none";
       }
 
-      if (finalData.recordingURL) {
-        document.getElementById("recordedVideo").src = finalData.recordingURL;
+      if (finalData.video) {
+        document.getElementById("recordedVideo").src = finalData.video;
       }
 
       document.getElementById("resultArea").classList.remove("d-none");
@@ -306,19 +306,21 @@
       }
     }
 
-    function stopRecordingAndGetURL() {
+    function stopRecordingAndGetBase64() {
       return new Promise((resolve) => {
         if (!mediaRecorder || mediaRecorder.state === "inactive") {
           return resolve("");
         }
         mediaRecorder.onstop = () => {
           const blob = new Blob(recordedChunks, { type: "video/webm" });
-          const url = URL.createObjectURL(blob);
-          resolve(url);
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result); // base64 string
+          reader.readAsDataURL(blob);
         };
         try { mediaRecorder.stop(); } catch (e) { resolve(""); }
       });
     }
+
 
     async function gradeExam(reason = "") {
       if (submitted) return;
@@ -343,7 +345,7 @@
         `;
       });
 
-      const recordingURL = await stopRecordingAndGetURL();
+      const base64Video = await stopRecordingAndGetBase64();
 
       const finalData = {
         fullname: student.fullName,
@@ -354,7 +356,9 @@
         completed: "Yes",
         explanations: explanationsHTML,
         reason: reason,
-        recordingURL: recordingURL || ""
+        recordingURL: recordingURL || "",
+        video: base64Video || ""
+
       };
 
       // ---- Send to backend ----
@@ -420,4 +424,5 @@
     markCompletedCompanies();
   </script>
 </body>
+
 </html>
