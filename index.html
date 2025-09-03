@@ -214,14 +214,16 @@
       sessionStorage.setItem('succode', succode);
 
       try {
-        const resp = await fetch("access.txt");
+        // Add cache-busting query param so browser always fetches latest file
+        const resp = await fetch("access.txt?nocache=" + new Date().getTime(), {
+          cache: "no-store"
+        });
         const text = await resp.text();
 
-        // Handle both Windows (\r\n) and Linux (\n) line endings
         const lines = text
           .split(/\r?\n/)
           .map(l => l.trim().toLowerCase())
-          .filter(l => l); // remove empty lines
+          .filter(l => l);
 
         console.log("Entered email:", email.toLowerCase());
         console.log("Access list:", lines);
@@ -235,6 +237,7 @@
       }
 
       showPayment();
+
 
     });
 
