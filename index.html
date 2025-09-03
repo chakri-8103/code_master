@@ -61,12 +61,6 @@
 
   <div class="container vh-100 d-flex flex-column justify-content-start align-items-center position-relative pt-5">
 
-    <!-- Offer Timer -->
-    <!-- <div class="alert alert-warning text-center w-100 mb-3" id="offerMessage">
-      🎉 Independence Day Special offer: <del>₹99</del> <b id="offerPrice">₹49</b>
-      <span id="countdown"></span>
-    </div> -->
-
     <!-- Top Thank You Message -->
     <div id="topMessage" class="alert alert-success w-100 text-center d-none" role="alert">
       🎉 Thank you! You are registered. Updates coming soon…
@@ -79,12 +73,6 @@
     </div>
 
     <!-- Welcome Card -->
-    <!-- <div id="welcomeCard" class="card shadow-lg p-4 fade-card visible" style="max-width: 650px; width: 100%;">
-      <h4 class="mb-3 text-primary fw-bold">Welcome to Code Master</h4>
-      <p>📅 Monday → Topic Announced | Sunday → Mock Test</p>
-      <p>Registration is compulsory. Fee: <b>₹199</b></p>
-      <button id="registerBtn" class="btn btn-primary mt-3 w-100" onclick="showRegister()">Register Now</button>
-    </div> -->
     <div id="welcomeCard" class="card shadow-lg p-4 fade-card visible" style="max-width: 650px; width: 100%;">
       <h4 class="mb-3 text-primary fw-bold">Welcome to Code Master</h4>
       <p>📅 Monday → Topic Announced | Sunday → Mock Test</p>
@@ -102,7 +90,6 @@
 
       <button id="registerBtn" class="btn btn-primary mt-3 w-100" onclick="showRegister()">Register Now</button>
     </div>
-
 
     <!-- Register Card -->
     <div id="registerCard" class="card shadow-lg p-4 fade-card hidden" style="max-width: 500px; width: 100%;">
@@ -122,6 +109,16 @@
         <div class="mb-3">
           <label class="form-label">College</label>
           <input id="college" type="text" class="form-control" placeholder="Enter your college name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Year</label>
+          <select id="year" class="form-select" required>
+            <option value="">Select Year</option>
+            <option value="1 Year">1 Year</option>
+            <option value="2 Year">2 Year</option>
+            <option value="3 Year">3 Year</option>
+            <option value="4 Year">4 Year</option>
+          </select>
         </div>
         <div class="mb-3">
           <label class="form-label">SUC Code</label>
@@ -179,28 +176,6 @@
       if (e.key === 'F12' || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key))) e.preventDefault();
     });
 
-    const offerEnd = new Date("2025-08-16 05:49:00").getTime();
-    const offerPriceElem = document.getElementById("offerPrice");
-    const paymentOfferPriceElem = document.getElementById("paymentOfferPrice");
-    const countdownElem = document.getElementById("countdown");
-
-    function updateOffer() {
-      const now = new Date().getTime();
-      const distance = offerEnd - now;
-      if (distance <= 0) {
-        offerPriceElem.textContent = "₹99";
-        paymentOfferPriceElem.textContent = "₹99";
-        countdownElem.textContent = " Offer expired";
-        return;
-      }
-      const d = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const s = Math.floor((distance % (1000 * 60)) / 1000);
-      countdownElem.textContent = ` | Offer ends in ${d}d ${h}h ${m}m ${s}s`;
-    }
-    setInterval(updateOffer, 1000); updateOffer();
-
     function showRegister() { document.getElementById('welcomeCard').classList.replace('visible', 'hidden'); document.getElementById('registerCard').classList.replace('hidden', 'visible'); }
     function showWelcome() { document.getElementById('registerCard').classList.replace('visible', 'hidden'); document.getElementById('welcomeCard').classList.replace('hidden', 'visible'); }
     function showPayment() { document.getElementById('registerCard').classList.replace('visible', 'hidden'); document.getElementById('paymentCard').classList.replace('hidden', 'visible'); }
@@ -212,6 +187,7 @@
         mobile: "entry.2222222222",
         email: "entry.3333333333",
         college: "entry.4444444444",
+        year: "entry.8888888888",
         succode: "entry.7777777777",
         paymentMethod: "entry.5555555555",
         transactionId: "entry.6666666666"
@@ -224,15 +200,17 @@
       const mobile = document.getElementById('mobile').value.trim();
       const email = document.getElementById('email').value.trim();
       const college = document.getElementById('college').value.trim();
+      const year = document.getElementById('year').value.trim();
       const succode = document.getElementById('succode').value.trim();
 
-      if (!name || !mobile || !email || !college || !succode) { alert("Fill all fields"); return; }
+      if (!name || !mobile || !email || !college || !year || !succode) { alert("Fill all fields"); return; }
       if (!/^\d{10}$/.test(mobile)) { alert("Enter valid 10-digit mobile number"); return; }
 
       sessionStorage.setItem('name', name);
       sessionStorage.setItem('mobile', mobile);
       sessionStorage.setItem('email', email);
       sessionStorage.setItem('college', college);
+      sessionStorage.setItem('year', year);
       sessionStorage.setItem('succode', succode);
 
       try {
@@ -260,6 +238,7 @@
       fd.append(GF_CONFIG.fields.mobile, sessionStorage.getItem('mobile'));
       fd.append(GF_CONFIG.fields.email, sessionStorage.getItem('email'));
       fd.append(GF_CONFIG.fields.college, sessionStorage.getItem('college'));
+      fd.append(GF_CONFIG.fields.year, sessionStorage.getItem('year'));
       fd.append(GF_CONFIG.fields.succode, sessionStorage.getItem('succode'));
       fd.append(GF_CONFIG.fields.paymentMethod, paymentMethod);
       fd.append(GF_CONFIG.fields.transactionId, transactionId);
