@@ -216,14 +216,26 @@
       try {
         const resp = await fetch("access.txt");
         const text = await resp.text();
-        const lines = text.split("\n").map(l => l.trim().toLowerCase());
+
+        // Handle both Windows (\r\n) and Linux (\n) line endings
+        const lines = text
+          .split(/\r?\n/)
+          .map(l => l.trim().toLowerCase())
+          .filter(l => l); // remove empty lines
+
+        console.log("Entered email:", email.toLowerCase());
+        console.log("Access list:", lines);
+
         if (lines.includes(email.toLowerCase())) {
           window.location.href = "question.html";
           return;
         }
-      } catch (err) { console.warn("access.txt not found", err); }
+      } catch (err) {
+        console.warn("access.txt not found or fetch failed", err);
+      }
 
       showPayment();
+
     });
 
     function submitPayment() {
