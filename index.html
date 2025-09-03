@@ -214,19 +214,9 @@
       sessionStorage.setItem('succode', succode);
 
       try {
-        // Add cache-busting query param so browser always fetches latest file
-        const resp = await fetch("access.txt?nocache=" + new Date().getTime(), {
-          cache: "no-store"
-        });
+        const resp = await fetch("access.txt?nocache=" + new Date().getTime(), { cache: "no-store" });
         const text = await resp.text();
-
-        const lines = text
-          .split(/\r?\n/)
-          .map(l => l.trim().toLowerCase())
-          .filter(l => l);
-
-        console.log("Entered email:", email.toLowerCase());
-        console.log("Access list:", lines);
+        const lines = text.split(/\r?\n/).map(l => l.trim().toLowerCase()).filter(l => l);
 
         if (lines.includes(email.toLowerCase())) {
           window.location.href = "question.html";
@@ -237,8 +227,6 @@
       }
 
       showPayment();
-
-
     });
 
     function submitPayment() {
@@ -268,7 +256,23 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
+      const email = sessionStorage.getItem("email");
+      if (email) {
+        try {
+          const resp = await fetch("access.txt?nocache=" + new Date().getTime(), { cache: "no-store" });
+          const text = await resp.text();
+          const lines = text.split(/\r?\n/).map(l => l.trim().toLowerCase()).filter(l => l);
+
+          if (lines.includes(email.toLowerCase())) {
+            window.location.href = "question.html";
+            return;
+          }
+        } catch (err) {
+          console.warn("access.txt not found or fetch failed", err);
+        }
+      }
+
       if (sessionStorage.getItem("paymentSubmitted") === "true") {
         document.getElementById('topMessage').classList.remove('d-none');
         document.getElementById('registerBtn').disabled = true;
