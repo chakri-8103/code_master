@@ -4,343 +4,277 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Code Master Pro</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Code Master</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    body {
-      background: #f8f9fa;
+    .title-section h1 {
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff416c, #ff4b2b, #ff9933);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2.5rem;
     }
 
-    .question-card {
-      margin-bottom: 20px;
+    .title-section h6 {
+      color: #6c757d;
+      letter-spacing: 1px;
+      font-style: italic;
     }
 
-    .form-title {
-      text-align: center;
-      margin-bottom: 30px;
+    .fade-card {
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    .submit-btn {
-      text-align: center;
-      margin-top: 20px;
+    .hidden {
+      opacity: 0;
+      transform: scale(0.98);
+      pointer-events: none;
+      position: absolute;
     }
 
-    .result-card {
-      margin-top: 30px;
+    .visible {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+      position: relative;
     }
 
-    #videoPreview {
-      width: 300px;
-      height: 220px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      margin: 10px auto;
-      display: block;
+    #topMessage {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      font-size: 0.9rem;
     }
 
-    .completed-item {
-      cursor: pointer;
-    }
-
-    .completed-item:hover {
-      background: #e9ecef;
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1055;
     }
   </style>
 </head>
 
-<body>
-  <div class="container my-4">
-    <div class="form-title">
-      <h2 class="fw-bold">Code Master - Online Exam</h2>
-      <p class="text-muted">Answer all questions carefully</p>
+<body class="bg-light">
+
+  <div class="container vh-100 d-flex flex-column justify-content-start align-items-center position-relative pt-5">
+
+    <!-- Offer Timer -->
+    <div class="alert alert-warning text-center w-100 mb-3" id="offerMessage">
+      🎉 Independence Day Special offer: <del>₹99</del> <b id="offerPrice">₹49</b>
+      <span id="countdown"></span>
     </div>
 
-    <form id="infoForm" autocomplete="off">
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Full Name</label>
-        <input type="text" class="form-control" id="fullName" required>
+    <!-- Top Thank You Message -->
+    <div id="topMessage" class="alert alert-success w-100 text-center d-none" role="alert">
+      🎉 Thank you! You are registered. Updates coming soon…
+    </div>
+
+    <!-- Title Section -->
+    <div class="text-center mb-4 title-section">
+      <h1>Code Master</h1>
+      <h6>Powered by cdavin</h6>
+    </div>
+
+    <!-- Welcome Card -->
+    <div id="welcomeCard" class="card shadow-lg p-4 fade-card visible" style="max-width: 650px; width: 100%;">
+      <h4 class="mb-3 text-primary fw-bold">Competition Details</h4>
+      <ul class="text-start">
+        <li>Total Rounds: 3 + 1 Final Round</li>
+        <li>1️⃣ Easy Round – 10 Questions – 20 mins</li>
+        <li>2️⃣ Medium Round – 10 Questions – 15 mins</li>
+        <li>3️⃣ Hard Round – 10 Questions – 10 mins</li>
+        <li>🏆 Final Round – 20 Questions – 20 mins</li>
+      </ul>
+      <p>📅 Every Sunday Exam & Monday Topics List</p>
+      <p>Registration is compulsory. Fee: <b>₹99</b></p>
+      <p>🎁 Top 1 to 30 students get Free Access in final round</p>
+      <p>⚠️ If score is below 60%, pay ₹49 to retake the same exam</p>
+      <button id="registerBtn" class="btn btn-primary mt-3 w-100" onclick="showRegister()">Register Now</button>
+    </div>
+
+    <!-- Register Card -->
+    <div id="registerCard" class="card shadow-lg p-4 fade-card hidden" style="max-width: 500px; width: 100%;">
+      <form id="cmForm">
+        <div class="mb-3">
+          <label class="form-label">Name</label>
+          <input id="name" type="text" class="form-control" placeholder="Enter your name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mobile Number</label>
+          <input id="mobile" type="tel" class="form-control" placeholder="10-digit mobile number" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input id="email" type="email" class="form-control" placeholder="Enter your email" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">College</label>
+          <input id="college" type="text" class="form-control" placeholder="Enter your college name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">SUC Code</label>
+          <input id="succode" type="text" class="form-control" placeholder="Enter SUC code" required>
+        </div>
+        <button id="submitBtn" type="submit" class="btn btn-primary w-100">Proceed</button>
+        <button type="button" class="btn btn-secondary w-100 mt-2" onclick="showWelcome()">Back</button>
+      </form>
+    </div>
+
+    <!-- Payment Section -->
+    <div id="paymentCard" class="card shadow-lg p-4 fade-card hidden" style="max-width: 500px; width: 100%;">
+      <h5 class="text-success mb-3 text-center">Payment</h5>
+      <p><del class="text-muted">₹99</del> <span class="fw-bold text-success" id="paymentOfferPrice">Now only
+          ₹49!</span></p>
+      <p>Scan QR below to pay:</p>
+      <div id="qrSection" class="d-flex justify-content-center mb-3">
+        <img src="phnpay.jpg" alt="Universal QR" class="img-fluid rounded shadow-sm p-3 bg-white"
+          style="max-width:300px;">
       </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Succode</label>
-        <input type="text" class="form-control" id="succode" required>
-      </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">College</label>
-        <input type="text" class="form-control" id="college" required>
-      </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Select Company</label>
-        <select id="companySelect" class="form-select" required>
-          <option value="">-- Choose Company --</option>
+      <div class="mb-3">
+        <label class="form-label">Payment Method</label>
+        <select class="form-select" id="paymentMethod" required>
+          <option value="">Select Payment Method</option>
+          <option value="PhonePe">PhonePe</option>
+          <option value="Google Pay">Google Pay</option>
+          <option value="Paytm">Paytm</option>
+          <option value="Amazon Pay">Amazon Pay</option>
         </select>
       </div>
-      <div class="submit-btn">
-        <button type="submit" class="btn btn-primary btn-lg">Start Exam</button>
+      <div class="mb-3">
+        <label class="form-label">Transaction ID</label>
+        <input type="text" class="form-control" id="transactionId" placeholder="Enter transaction ID" required>
       </div>
-      <div id="completedList" class="mt-4"></div>
-    </form>
+      <button class="btn btn-primary w-100" onclick="submitPayment()">Submit Payment</button>
+    </div>
 
-    <form id="examForm" class="d-none" autocomplete="off">
-      <video id="videoPreview" autoplay muted></video>
-      <div id="questionsArea"></div>
-      <div class="submit-btn">
-        <button type="submit" class="btn btn-success btn-lg">Submit Exam</button>
-      </div>
-    </form>
+  </div>
 
-    <div id="resultArea" class="result-card d-none">
-      <div class="card p-4 shadow-sm">
-        <h4 class="fw-bold">Exam Result</h4>
-        <p class="mb-1"><b>Full Name:</b> <span id="resName"></span></p>
-        <p class="mb-1"><b>Succode:</b> <span id="resSuccode"></span></p>
-        <p class="mb-1"><b>Company:</b> <span id="resCompany"></span></p>
-        <p class="mb-1"><b>Marks:</b> <span id="resMarks"></span></p>
-        <p class="mb-1"><b>Status:</b> <span id="resStatus"></span></p>
-        <p class="text-danger" id="resReason" style="display:none;"></p>
-        <h5 class="mt-3">Explanations:</h5>
-        <div id="resExplanations"></div>
-
-        <h5 class="mt-3">Recording:</h5>
-        <video id="recordedVideo" controls style="width:300px; border:2px solid #ccc; border-radius:10px;"></video>
-
-        <div class="text-center mt-3">
-          <button id="homeBtn" class="btn btn-secondary">🏠 Home</button>
-        </div>
+  <!-- Toast -->
+  <div class="toast-container">
+    <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
+      aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">✅ Payment Completed Successfully!</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+          aria-label="Close"></button>
       </div>
     </div>
   </div>
 
   <script>
-    document.addEventListener("contextmenu", e => e.preventDefault());
-    document.addEventListener("selectstart", e => e.preventDefault());
-    ["copy", "paste", "cut"].forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
-    document.addEventListener("keydown", e => {
-      const key = e.key;
-      const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "s", "S"];
-      if (key === "F12" || key === "PrintScreen" || (e.ctrlKey && blockedCtrl.includes(key)) || (e.ctrlKey && e.shiftKey && (key === "i" || key === "I"))) {
-        e.preventDefault();
-        alert("⚠️ This action is disabled during the exam!");
-      }
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (e.key === 'F12' || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key))) e.preventDefault();
     });
-    document.addEventListener("keyup", e => { if (e.key === "PrintScreen") { navigator.clipboard.writeText(""); alert("⚠️ Screenshots are disabled during the exam!"); } });
 
-    let questionsData = {};
-    let submitted = false;
-    let mediaRecorder;
-    let recordedChunks = [];
-    let student = { fullName: "", succode: "", college: "", company: "" };
+    const offerEnd = new Date("2025-08-16 05:49:00").getTime();
+    const offerPriceElem = document.getElementById("offerPrice");
+    const paymentOfferPriceElem = document.getElementById("paymentOfferPrice");
+    const countdownElem = document.getElementById("countdown");
 
-    const companies = [
-      "WIPRO - Quantitative Aptitude",
-      "WIPRO - Verbal Ability",
-      "WIPRO - Logical Reasoning"
-    ];
-
-    function saveResult(data) {
-      let results = JSON.parse(localStorage.getItem("examResults") || "[]");
-      results = results.filter(r => r.company !== data.company);
-      results.push(data);
-      localStorage.setItem("examResults", JSON.stringify(results));
-    }
-    function getResult(company) {
-      let results = JSON.parse(localStorage.getItem("examResults") || "[]");
-      return results.find(r => r.company === company);
-    }
-    function saveCompletedCompany(company) {
-      let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
-      if (!completed.includes(company)) { completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); }
-    }
-    function markCompletedCompanies() {
-      let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
-      const listDiv = document.getElementById("completedList");
-      if (completed.length > 0) {
-        listDiv.innerHTML = "<h6>✅ Completed Tests</h6><ul class='list-group'>" + completed.map(c => `<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("") + "</ul>";
-        document.querySelectorAll(".completed-item").forEach(item => {
-          item.addEventListener("click", () => {
-            const comp = item.getAttribute("data-company");
-            const res = getResult(comp);
-            if (res) showResult(res, false);
-          });
-        });
-      } else { listDiv.innerHTML = ""; }
-      const companySelect = document.getElementById("companySelect");
-      [...companySelect.options].forEach(opt => { if (completed.includes(opt.value)) opt.remove(); });
-    }
-
-    async function loadQuestions() {
-      try {
-        const response = await fetch("question.txt");
-        const text = await response.text();
-        const lines = text.split("\n").map(l => l.trim());
-        let currentCompany = "", qObj = null;
-        lines.forEach(line => {
-          if (!line) return;
-          if (companies.includes(line)) { currentCompany = line; if (!questionsData[currentCompany]) questionsData[currentCompany] = []; qObj = null; return; }
-          if (line.startsWith("Q")) { qObj = { question: line, options: [], answer: "", explanation: "" }; questionsData[currentCompany].push(qObj); return; }
-          if (qObj && qObj.options.length < 4 && !line.startsWith("Answer:") && !line.startsWith("Explanation:")) { qObj.options.push(line); return; }
-          if (line.startsWith("Answer:")) { qObj.answer = line.replace("Answer:", "").trim(); return; }
-          if (line.startsWith("Explanation:")) { qObj.explanation = line.replace("Explanation:", "").trim(); return; }
-        });
-      } catch (e) {
-        console.warn("question.txt not found or failed to load. You can still use the test UI.");
-      }
-      const companySelect = document.getElementById("companySelect");
-      companies.forEach(company => {
-        const opt = document.createElement("option");
-        opt.value = company;
-        opt.textContent = company;
-        companySelect.appendChild(opt);
-      });
-    }
-
-    function renderQuestions(company) {
-      const questionsArea = document.getElementById("questionsArea");
-      questionsArea.innerHTML = "";
-      if (!company || !questionsData[company] || questionsData[company].length === 0) {
-        questionsArea.innerHTML = `<div class="alert alert-warning">No questions available for ${company}. Updated Soon.</div>`;
+    function updateOffer() {
+      const now = new Date().getTime();
+      const distance = offerEnd - now;
+      if (distance <= 0) {
+        offerPriceElem.textContent = "₹99";
+        paymentOfferPriceElem.textContent = "₹99";
+        countdownElem.textContent = " Offer expired";
         return;
       }
-      questionsData[company].forEach((q, index) => {
-        const card = document.createElement("div");
-        card.className = "card question-card p-3 shadow-sm";
-        card.innerHTML = `
-          <h5 class="fw-bold">${q.question}</h5>
-          ${q.options.map(opt => `
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="q${index}" value="${opt}" required>
-              <label class="form-check-label">${opt}</label>
-            </div>`).join("")}
-        `;
-        questionsArea.appendChild(card);
-      });
+      const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((distance % (1000 * 60)) / 1000);
+      countdownElem.textContent = ` | Offer ends in ${d}d ${h}h ${m}m ${s}s`;
     }
+    setInterval(updateOffer, 1000); updateOffer();
 
-    function eq(a, b) { return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase(); }
+    function showRegister() { document.getElementById('welcomeCard').classList.replace('visible', 'hidden'); document.getElementById('registerCard').classList.replace('hidden', 'visible'); }
+    function showWelcome() { document.getElementById('registerCard').classList.replace('visible', 'hidden'); document.getElementById('welcomeCard').classList.replace('hidden', 'visible'); }
+    function showPayment() { document.getElementById('registerCard').classList.replace('visible', 'hidden'); document.getElementById('paymentCard').classList.replace('hidden', 'visible'); }
 
-    function showResult(finalData, save = true) {
-      document.getElementById("resName").textContent = finalData.fullname;
-      document.getElementById("resSuccode").textContent = finalData.succode;
-      document.getElementById("resCompany").textContent = finalData.company;
-      document.getElementById("resMarks").textContent = finalData.marks;
-      document.getElementById("resStatus").textContent = "Completed";
-      document.getElementById("resExplanations").innerHTML = finalData.explanations || "";
-      const reasonEl = document.getElementById("resReason");
-      if (finalData.reason) { reasonEl.textContent = `Auto-submitted: ${finalData.reason}`; reasonEl.style.display = "block"; } else reasonEl.style.display = "none";
-      const recordedEl = document.getElementById("recordedVideo");
-      recordedEl.src = finalData.recordingURL || finalData.video || "";
-      document.getElementById("resultArea").classList.remove("d-none");
-      document.getElementById("infoForm").classList.add("d-none");
-      document.getElementById("examForm").classList.add("d-none");
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-      if (save) { saveResult(finalData); saveCompletedCompany(finalData.company); markCompletedCompanies(); }
-    }
-
-    function stopRecordingAndGetBase64() {
-      return new Promise((resolve) => {
-        if (!mediaRecorder || mediaRecorder.state === "inactive") return resolve("");
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(recordedChunks, { type: "video/webm" });
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsDataURL(blob);
-        };
-        try { mediaRecorder.stop(); } catch (e) { resolve(""); }
-      });
-    }
-
-    async function gradeExam(reason = "") {
-      if (submitted) return;
-      submitted = true;
-      if (!questionsData[student.company]) return;
-      let correct = 0;
-      let explanationsHTML = "";
-      questionsData[student.company].forEach((q, index) => {
-        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        if (selected && eq(selected.value, q.answer)) correct++;
-        explanationsHTML += `
-          <div class="card mb-2 p-2">
-            <p><b>${q.question}</b></p>
-            <p>✅ Correct Answer: ${q.answer}</p>
-            <p>ℹ️ Explanation: ${q.explanation}</p>
-          </div>`;
-      });
-
-      const videoBase64 = await stopRecordingAndGetBase64();
-
-      let recordingURL = "";
-      if (videoBase64) {
-        const byteString = atob(videoBase64.split(",")[1]);
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-        const blob = new Blob([ab], { type: "video/webm" });
-        recordingURL = URL.createObjectURL(blob);
+    const GF_CONFIG = {
+      action: "https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse",
+      fields: {
+        name: "entry.1111111111",
+        mobile: "entry.2222222222",
+        email: "entry.3333333333",
+        college: "entry.4444444444",
+        succode: "entry.7777777777",
+        paymentMethod: "entry.5555555555",
+        transactionId: "entry.6666666666"
       }
+    };
 
-      const finalData = {
-        fullname: student.fullName,
-        succode: student.succode,
-        college: student.college,
-        company: student.company,
-        marks: `${correct} / ${questionsData[student.company].length}`,
-        completed: "Yes",
-        explanations: explanationsHTML,
-        reason: reason,
-        video: videoBase64 || ""
-      };
-
-      try {
-        const resp = await fetch("https://e4df9110a398.ngrok-free.app/submitExam", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(finalData)
-        });
-        const json = await resp.json();
-        if (json && json.success && json.id) {
-          finalData.id = json.id;
-        } else {
-          console.warn("Backend responded without id:", json);
-        }
-      } catch (err) {
-        console.error("Error sending to backend:", err);
-      }
-
-      finalData.recordingURL = recordingURL;
-      showResult(finalData, true);
-    }
-
-    document.getElementById("infoForm").addEventListener("submit", async e => {
+    document.getElementById('cmForm').addEventListener('submit', async e => {
       e.preventDefault();
-      student.fullName = document.getElementById("fullName").value;
-      student.succode = document.getElementById("succode").value;
-      student.college = document.getElementById("college").value;
-      student.company = document.getElementById("companySelect").value;
-      if (!student.company) { alert("Please select a company"); return; }
-      document.getElementById("infoForm").classList.add("d-none");
-      document.getElementById("examForm").classList.remove("d-none");
-      renderQuestions(student.company);
+      const name = document.getElementById('name').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const college = document.getElementById('college').value.trim();
+      const succode = document.getElementById('succode').value.trim();
+
+      if (!name || !mobile || !email || !college || !succode) { alert("Fill all fields"); return; }
+      if (!/^\d{10}$/.test(mobile)) { alert("Enter valid 10-digit mobile number"); return; }
+
+      sessionStorage.setItem('name', name);
+      sessionStorage.setItem('mobile', mobile);
+      sessionStorage.setItem('email', email);
+      sessionStorage.setItem('college', college);
+      sessionStorage.setItem('succode', succode);
 
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        document.getElementById("videoPreview").srcObject = stream;
-        mediaRecorder = new MediaRecorder(stream);
-        recordedChunks = [];
-        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
-        mediaRecorder.start();
-      } catch (err) {
-        alert("Camera/Microphone access denied. Exam cannot continue.");
-      }
+        const resp = await fetch("access.txt");
+        const text = await resp.text();
+        const lines = text.split("\n").map(l => l.trim().toLowerCase());
+        if (lines.includes(email.toLowerCase())) {
+          window.location.href = "question.html";
+          return;
+        }
+      } catch (err) { console.warn("access.txt not found", err); }
+
+      showPayment();
     });
 
-    document.getElementById("examForm").addEventListener("submit", function (e) { e.preventDefault(); gradeExam(""); });
+    function submitPayment() {
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      const transactionId = document.getElementById('transactionId').value.trim();
+      if (!paymentMethod || !transactionId) { alert("Fill all fields"); return; }
 
-    document.addEventListener("visibilitychange", () => { if (document.hidden && !submitted) gradeExam("Tab/window change detected."); });
+      sessionStorage.setItem("paymentSubmitted", "true");
 
-    document.getElementById("homeBtn").addEventListener("click", () => { document.getElementById("resultArea").classList.add("d-none"); document.getElementById("infoForm").classList.remove("d-none"); document.getElementById("examForm").classList.add("d-none"); submitted = false; markCompletedCompanies(); });
+      const fd = new FormData();
+      fd.append(GF_CONFIG.fields.name, sessionStorage.getItem('name'));
+      fd.append(GF_CONFIG.fields.mobile, sessionStorage.getItem('mobile'));
+      fd.append(GF_CONFIG.fields.email, sessionStorage.getItem('email'));
+      fd.append(GF_CONFIG.fields.college, sessionStorage.getItem('college'));
+      fd.append(GF_CONFIG.fields.succode, sessionStorage.getItem('succode'));
+      fd.append(GF_CONFIG.fields.paymentMethod, paymentMethod);
+      fd.append(GF_CONFIG.fields.transactionId, transactionId);
 
-    loadQuestions();
-    markCompletedCompanies();
+      fetch(GF_CONFIG.action, { method: "POST", mode: "no-cors", body: fd })
+        .finally(() => {
+          document.getElementById('paymentCard').classList.replace('visible', 'hidden');
+          document.getElementById('welcomeCard').classList.replace('hidden', 'visible');
+          document.getElementById('topMessage').classList.remove('d-none');
+          document.getElementById('registerBtn').disabled = true;
+          new bootstrap.Toast(document.getElementById('successToast')).show();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (sessionStorage.getItem("paymentSubmitted") === "true") {
+        document.getElementById('topMessage').classList.remove('d-none');
+        document.getElementById('registerBtn').disabled = true;
+      } else if (sessionStorage.getItem('name')) {
+        showPayment();
+      }
+    });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
