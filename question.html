@@ -66,26 +66,31 @@
     </div>
 
     <!-- Student Info Form -->
+    <!-- Student Info Form -->
     <form id="infoForm" autocomplete="off">
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">Full Name</label>
-        <input type="text" class="form-control" id="fullName" required>
+        <input type="text" class="form-control" id="fullName" readonly>
       </div>
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">Succode</label>
-        <input type="text" class="form-control" id="succode" required>
+        <input type="text" class="form-control" id="succode" readonly>
       </div>
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">College</label>
-        <input type="text" class="form-control" id="college" required>
+        <input type="text" class="form-control" id="college" readonly>
       </div>
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">Mobile Number</label>
-        <input type="text" class="form-control" id="mobile" required>
+        <input type="text" class="form-control" id="mobile" readonly>
       </div>
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">Email</label>
-        <input type="email" class="form-control" id="email" required>
+        <input type="email" class="form-control" id="email" readonly>
+      </div>
+      <div class="card mb-3 p-3">
+        <label class="form-label fw-bold">Year</label>
+        <input type="text" class="form-control" id="year" readonly>
       </div>
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">Select Company</label>
@@ -98,6 +103,7 @@
       </div>
       <div id="completedList" class="mt-4"></div>
     </form>
+
 
     <!-- Exam Form -->
     <form id="examForm" class="d-none" autocomplete="off">
@@ -140,6 +146,27 @@
   </div>
 
   <script>
+    // Load student info from sessionStorage
+    function loadStudentInfo() {
+      const studentData = {
+        fullName: sessionStorage.getItem("name"),
+        succode: sessionStorage.getItem("succode"),
+        college: sessionStorage.getItem("college"),
+        mobile: sessionStorage.getItem("mobile"),
+        email: sessionStorage.getItem("email"),
+        year: sessionStorage.getItem("year")
+      };
+
+      if (studentData.fullName) document.getElementById("fullName").value = studentData.fullName;
+      if (studentData.succode) document.getElementById("succode").value = studentData.succode;
+      if (studentData.college) document.getElementById("college").value = studentData.college;
+      if (studentData.mobile) document.getElementById("mobile").value = studentData.mobile;
+      if (studentData.email) document.getElementById("email").value = studentData.email;
+      if (studentData.year) document.getElementById("year").value = studentData.year;
+    }
+
+    loadStudentInfo();
+
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("selectstart", e => e.preventDefault());
     ["copy", "paste", "cut"].forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
