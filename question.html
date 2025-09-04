@@ -344,7 +344,7 @@
         // Convert chunks to blob
         const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
         const base64Video = await blobToBase64(videoBlob);
-        finalData.video = base64Video;
+        finalData.videoUrl = base64Video;
 
         const resp = await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam", {
           method: "POST",
