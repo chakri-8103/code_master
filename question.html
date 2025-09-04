@@ -278,11 +278,12 @@
     function blobToBase64(blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result.split(",")[1]);
+        reader.onloadend = () => resolve(reader.result); // full dataURL (prefix included)
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       });
     }
+
 
     function showResult(finalData, save = true) {
       document.getElementById("resName").textContent = finalData.fullname;
@@ -377,7 +378,7 @@
       renderQuestions(student.company);
 
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 }, audio: true });
         document.getElementById("videoPreview").srcObject = stream;
         mediaRecorder = new MediaRecorder(stream);
         recordedChunks = [];
