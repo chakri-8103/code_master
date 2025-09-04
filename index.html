@@ -207,12 +207,12 @@
       if (!name || !mobile || !email || !college || !year || !succode) { alert("Fill all fields"); return; }
       if (!/^\d{10}$/.test(mobile)) { alert("Enter valid 10-digit mobile number"); return; }
 
-      sessionStorage.setItem('name', name);
-      sessionStorage.setItem('mobile', mobile);
-      sessionStorage.setItem('email', email);
-      sessionStorage.setItem('college', college);
-      sessionStorage.setItem('year', year);
-      sessionStorage.setItem('succode', succode);
+      localStorage.setItem('name', name);
+      localStorage.setItem('mobile', mobile);
+      localStorage.setItem('email', email);
+      localStorage.setItem('college', college);
+      localStorage.setItem('year', year);
+      localStorage.setItem('succode', succode);
 
       try {
         const resp = await fetch("access.txt?nocache=" + new Date().getTime(), { cache: "no-store" });
@@ -235,15 +235,15 @@
       const transactionId = document.getElementById('transactionId').value.trim();
       if (!paymentMethod || !transactionId) { alert("Fill all fields"); return; }
 
-      sessionStorage.setItem("paymentSubmitted", "true");
+      localStorage.setItem("paymentSubmitted", "true");
 
       const fd = new FormData();
-      fd.append(GF_CONFIG.fields.name, sessionStorage.getItem('name'));
-      fd.append(GF_CONFIG.fields.mobile, sessionStorage.getItem('mobile'));
-      fd.append(GF_CONFIG.fields.email, sessionStorage.getItem('email'));
-      fd.append(GF_CONFIG.fields.college, sessionStorage.getItem('college'));
-      fd.append(GF_CONFIG.fields.year, sessionStorage.getItem('year'));
-      fd.append(GF_CONFIG.fields.succode, sessionStorage.getItem('succode'));
+      fd.append(GF_CONFIG.fields.name, localStorage.getItem('name'));
+      fd.append(GF_CONFIG.fields.mobile, localStorage.getItem('mobile'));
+      fd.append(GF_CONFIG.fields.email, localStorage.getItem('email'));
+      fd.append(GF_CONFIG.fields.college, localStorage.getItem('college'));
+      fd.append(GF_CONFIG.fields.year, localStorage.getItem('year'));
+      fd.append(GF_CONFIG.fields.succode, localStorage.getItem('succode'));
       fd.append(GF_CONFIG.fields.paymentMethod, paymentMethod);
       fd.append(GF_CONFIG.fields.transactionId, transactionId);
 
@@ -258,7 +258,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-      const email = sessionStorage.getItem("email");
+      const email = localStorage.getItem("email");
       if (email) {
         try {
           const resp = await fetch("access.txt?nocache=" + new Date().getTime(), { cache: "no-store" });
@@ -274,10 +274,10 @@
         }
       }
 
-      if (sessionStorage.getItem("paymentSubmitted") === "true") {
+      if (localStorage.getItem("paymentSubmitted") === "true") {
         document.getElementById('topMessage').classList.remove('d-none');
         document.getElementById('registerBtn').disabled = true;
-      } else if (sessionStorage.getItem('name')) {
+      } else if (localStorage.getItem('name')) {
         showPayment();
       }
     });
