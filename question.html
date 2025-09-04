@@ -75,6 +75,17 @@
     </div>
   </div>
 
+  <!-- Toast -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100;">
+    <div id="submitToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage">Video submitted successfully!</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     function loadStudentInfo() {
       const studentData = {
@@ -166,12 +177,22 @@
       const url="https://api.cloudinary.com/v1_1/druxczlqv/video/upload";
       const formData=new FormData();
       formData.append("file",blob);
-      formData.append("upload_preset","exam_videos"); // Replace with your preset
+      formData.append("upload_preset","exam_videos"); 
       try{
         const resp=await fetch(url,{method:"POST",body:formData});
         const data=await resp.json();
         return data.secure_url;
       }catch(err){ console.error("Cloudinary upload failed:",err); return null; }
+    }
+
+    function showToast(message, success = true){
+      const toastEl = document.getElementById("submitToast");
+      const toastBody = document.getElementById("toastMessage");
+      toastBody.textContent = message;
+      toastEl.classList.remove("text-bg-success","text-bg-danger");
+      toastEl.classList.add(success ? "text-bg-success" : "text-bg-danger");
+      const bsToast = new bootstrap.Toast(toastEl);
+      bsToast.show();
     }
 
     async function showResult(finalData, save=true){
@@ -213,8 +234,9 @@
 
         const resp=await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(finalData)});
         const json=await resp.json();
-        if(json && json.success && json.id){ finalData.id=json.id; }
-      }catch(err){ console.error("Error sending to backend:", err); }
+        if(json && json.success && json.id){ finalData.id=json.id; showToast(finalData.video ? "✅ Video URL sent successfully!" : "⚠️ No video recorded.", true);}
+        else{ showToast("❌ Submission failed!", false); }
+      }catch(err){ console.error("Error sending to backend:", err); showToast("❌ Submission failed!", false); }
 
       showResult(finalData,true);
     }
@@ -244,11 +266,7 @@
 
     document.getElementById("examForm").addEventListener("submit",e=>{ e.preventDefault(); gradeExam(""); });
     document.addEventListener("visibilitychange",()=>{ if(document.hidden && !submitted) gradeExam("Tab/window change detected."); });
-    document.getElementById("homeBtn").addEventListener("click",()=>{
-      document.getElementById("resultArea").classList.add("d-none");
-      document.getElementById("infoForm").classList.remove("d-none");
-      markCompletedCompanies();
-    });
+    document.getElementById("homeBtn").addEventListener("click",()=>{ document.getElementById("resultArea").classList.add("d-none"); document.getElementById("infoForm").classList.remove("d-none"); markCompletedCompanies(); });
 
     loadQuestions(); markCompletedCompanies();
   </script>
