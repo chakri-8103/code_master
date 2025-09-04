@@ -143,17 +143,7 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.3/axios.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-core/2.12.0/cloudinary-core-shrinkwrap.min.js"></script>
   <script>
-    // ---------- Cloudinary Config ----------
-    const cloudinary = new cloudinary.Cloudinary({
-      cloud_name: "druxczlqv",
-      api_key: "378222323255568",
-      api_secret: "CWdL411_BhUvsC_9V34Z_LcNVS4",
-      secure: true
-    });
-
     // ---------- Student Info ----------
     function loadStudentInfo() {
       const studentData = {
@@ -284,14 +274,16 @@
 
     function eq(a, b) { return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase(); }
 
+    // Convert Blob -> Base64
     function blobToBase64(blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
+        reader.onloadend = () => resolve(reader.result); // full dataURL (prefix included)
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       });
     }
+
 
     function showResult(finalData, save = true) {
       document.getElementById("resName").textContent = finalData.fullname;
@@ -345,10 +337,12 @@
       };
 
       try {
+        // 🎥 Stop recording
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
           mediaRecorder.stop();
         }
 
+        // Convert chunks to blob
         const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
         const base64Video = await blobToBase64(videoBlob);
         finalData.video = base64Video;
