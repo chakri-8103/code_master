@@ -7,54 +7,15 @@
   <title>Code Master Pro</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background: #f8f9fa;
-    }
-
-    .question-card {
-      margin-bottom: 20px;
-    }
-
-    .form-title {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .submit-btn {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .result-card {
-      margin-top: 30px;
-    }
-
-    #videoPreview {
-      width: 100%;
-      max-width: 300px;
-      height: 220px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      margin: 10px auto;
-      display: block;
-      position: sticky;
-      top: 10px;
-      z-index: 10;
-    }
-
-    .completed-item {
-      cursor: pointer;
-    }
-
-    .completed-item:hover {
-      background: #e9ecef;
-    }
-
-    #questionsWrapper {
-      max-height: 500px;
-      overflow-y: auto;
-      padding-right: 10px;
-    }
+    body { background: #f8f9fa; }
+    .question-card { margin-bottom: 20px; }
+    .form-title { text-align: center; margin-bottom: 30px; }
+    .submit-btn { text-align: center; margin-top: 20px; }
+    .result-card { margin-top: 30px; }
+    #videoPreview { width: 100%; max-width: 300px; height: 220px; border: 2px solid #ccc; border-radius: 10px; margin: 10px auto; display: block; position: sticky; top: 10px; z-index: 10; }
+    .completed-item { cursor: pointer; }
+    .completed-item:hover { background: #e9ecef; }
+    #questionsWrapper { max-height: 500px; overflow-y: auto; padding-right: 10px; }
   </style>
 </head>
 
@@ -67,55 +28,29 @@
 
     <!-- Student Info Form -->
     <form id="infoForm" autocomplete="off">
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Full Name</label>
-        <input type="text" class="form-control" id="fullName" readonly>
-      </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Succode</label>
-        <input type="text" class="form-control" id="succode" readonly>
-      </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">College</label>
-        <input type="text" class="form-control" id="college" readonly>
-      </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Mobile Number</label>
-        <input type="text" class="form-control" id="mobile" readonly>
-      </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Email</label>
-        <input type="email" class="form-control" id="email" readonly>
-      </div>
-      <div class="card mb-3 p-3">
-        <label class="form-label fw-bold">Year</label>
-        <input type="text" class="form-control" id="year" readonly>
-      </div>
+      <div class="card mb-3 p-3"><label class="form-label fw-bold">Full Name</label><input type="text" class="form-control" id="fullName" readonly></div>
+      <div class="card mb-3 p-3"><label class="form-label fw-bold">Succode</label><input type="text" class="form-control" id="succode" readonly></div>
+      <div class="card mb-3 p-3"><label class="form-label fw-bold">College</label><input type="text" class="form-control" id="college" readonly></div>
+      <div class="card mb-3 p-3"><label class="form-label fw-bold">Mobile Number</label><input type="text" class="form-control" id="mobile" readonly></div>
+      <div class="card mb-3 p-3"><label class="form-label fw-bold">Email</label><input type="email" class="form-control" id="email" readonly></div>
+      <div class="card mb-3 p-3"><label class="form-label fw-bold">Year</label><input type="text" class="form-control" id="year" readonly></div>
       <div class="card mb-3 p-3">
         <label class="form-label fw-bold">Select Company</label>
         <select id="companySelect" class="form-select" required>
           <option value="">-- Choose Company --</option>
         </select>
       </div>
-      <div class="submit-btn">
-        <button type="submit" class="btn btn-primary btn-lg">Start Exam</button>
-      </div>
+      <div class="submit-btn"><button type="submit" class="btn btn-primary btn-lg">Start Exam</button></div>
       <div id="completedList" class="mt-4"></div>
     </form>
 
     <!-- Exam Form -->
     <form id="examForm" class="d-none" autocomplete="off">
       <div class="row">
-        <div class="col-md-4 text-center">
-          <video id="videoPreview" autoplay muted></video>
-        </div>
+        <div class="col-md-4 text-center"><video id="videoPreview" autoplay muted></video></div>
         <div class="col-md-8">
-          <div id="questionsWrapper">
-            <div id="questionsArea"></div>
-          </div>
-          <div class="submit-btn">
-            <button type="submit" class="btn btn-success btn-lg">Submit Exam</button>
-          </div>
+          <div id="questionsWrapper"><div id="questionsArea"></div></div>
+          <div class="submit-btn"><button type="submit" class="btn btn-success btn-lg">Submit Exam</button></div>
         </div>
       </div>
     </form>
@@ -135,16 +70,12 @@
         <p class="text-danger" id="resReason" style="display:none;"></p>
         <h5 class="mt-3">Explanations:</h5>
         <div id="resExplanations"></div>
-
-        <div class="text-center mt-3">
-          <button id="homeBtn" class="btn btn-secondary">🏠 Home</button>
-        </div>
+        <div class="text-center mt-3"><button id="homeBtn" class="btn btn-secondary">🏠 Home</button></div>
       </div>
     </div>
   </div>
 
   <script>
-    // ---------- Student Info ----------
     function loadStudentInfo() {
       const studentData = {
         fullName: sessionStorage.getItem("name"),
@@ -163,245 +94,163 @@
     }
     loadStudentInfo();
 
-    // ---------- Security ----------
     document.addEventListener("contextmenu", e => e.preventDefault());
     document.addEventListener("selectstart", e => e.preventDefault());
-    ["copy", "paste", "cut"].forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
+    ["copy","paste","cut"].forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
     document.addEventListener("keydown", e => {
       const key = e.key;
-      const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "s", "S"];
-      if (key === "F12" || key === "PrintScreen" || (e.ctrlKey && blockedCtrl.includes(key)) || (e.ctrlKey && e.shiftKey && (key === "i" || key === "I"))) {
-        e.preventDefault();
-        alert("⚠️ This action is disabled during the exam!");
+      const blockedCtrl = ["u","U","c","C","v","V","x","X","s","S"];
+      if (key==="F12" || key==="PrintScreen" || (e.ctrlKey && blockedCtrl.includes(key)) || (e.ctrlKey && e.shiftKey && (key==="i"||key==="I"))) {
+        e.preventDefault(); alert("⚠️ This action is disabled during the exam!");
       }
     });
-    document.addEventListener("keyup", e => { if (e.key === "PrintScreen") { navigator.clipboard.writeText(""); alert("⚠️ Screenshots are disabled during the exam!"); } });
+    document.addEventListener("keyup", e => { if(e.key==="PrintScreen"){navigator.clipboard.writeText(""); alert("⚠️ Screenshots are disabled during the exam!");} });
 
-    // ---------- Vars ----------
-    let questionsData = {};
-    let submitted = false;
-    let mediaRecorder;
-    let recordedChunks = [];
-    let student = { fullName: "", succode: "", college: "", mobile: "", email: "", company: "" };
+    let questionsData = {}, submitted = false, mediaRecorder, recordedChunks = [], student={fullName:"",succode:"",college:"",mobile:"",email:"",company:""};
+    const companies = ["WIPRO - Quantitative Aptitude","WIPRO - Verbal Ability","WIPRO - Logical Reasoning"];
 
-    const companies = [
-      "WIPRO - Quantitative Aptitude",
-      "WIPRO - Verbal Ability",
-      "WIPRO - Logical Reasoning"
-    ];
-
-    // ---------- Helpers ----------
-    function saveResult(data) {
-      let results = JSON.parse(localStorage.getItem("examResults") || "[]");
-      results = results.filter(r => r.company !== data.company);
-      results.push(data);
-      localStorage.setItem("examResults", JSON.stringify(results));
-    }
-    function getResult(company) {
-      let results = JSON.parse(localStorage.getItem("examResults") || "[]");
-      return results.find(r => r.company === company);
-    }
-    function saveCompletedCompany(company) {
-      let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
-      if (!completed.includes(company)) { completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); }
-    }
-    function markCompletedCompanies() {
-      let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
-      const listDiv = document.getElementById("completedList");
-      if (completed.length > 0) {
-        listDiv.innerHTML = "<h6>✅ Completed Tests</h6><ul class='list-group'>" +
-          completed.map(c => `<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("") +
+    function saveResult(data){ let results = JSON.parse(localStorage.getItem("examResults")||"[]"); results=results.filter(r=>r.company!==data.company); results.push(data); localStorage.setItem("examResults", JSON.stringify(results)); }
+    function getResult(company){ let results = JSON.parse(localStorage.getItem("examResults")||"[]"); return results.find(r=>r.company===company); }
+    function saveCompletedCompany(company){ let completed=JSON.parse(localStorage.getItem("completedCompanies")||"[]"); if(!completed.includes(company)){ completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); } }
+    function markCompletedCompanies(){
+      let completed=JSON.parse(localStorage.getItem("completedCompanies")||"[]");
+      const listDiv=document.getElementById("completedList");
+      if(completed.length>0){
+        listDiv.innerHTML="<h6>✅ Completed Tests</h6><ul class='list-group'>"+
+          completed.map(c=>`<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("")+
           "</ul>";
-        document.querySelectorAll(".completed-item").forEach(item => {
-          item.addEventListener("click", () => {
-            const comp = item.getAttribute("data-company");
-            const res = getResult(comp);
-            if (res) showResult(res, false);
-          });
+        document.querySelectorAll(".completed-item").forEach(item=>{
+          item.addEventListener("click",()=>{ const comp=item.getAttribute("data-company"); const res=getResult(comp); if(res) showResult(res,false); });
         });
-      } else { listDiv.innerHTML = ""; }
-      const companySelect = document.getElementById("companySelect");
-      [...companySelect.options].forEach(opt => { if (completed.includes(opt.value)) opt.remove(); });
+      } else { listDiv.innerHTML=""; }
+      const companySelect=document.getElementById("companySelect");
+      [...companySelect.options].forEach(opt=>{ if(completed.includes(opt.value)) opt.remove(); });
     }
 
-    async function loadQuestions() {
-      try {
+    async function loadQuestions(){
+      try{
         const response = await fetch("question.txt");
         const text = await response.text();
-        const lines = text.split("\n").map(l => l.trim());
-        let currentCompany = "", qObj = null;
-        lines.forEach(line => {
-          if (!line) return;
-          if (companies.includes(line)) { currentCompany = line; if (!questionsData[currentCompany]) questionsData[currentCompany] = []; qObj = null; return; }
-          if (line.startsWith("Q")) { qObj = { question: line, options: [], answer: "", explanation: "" }; questionsData[currentCompany].push(qObj); return; }
-          if (qObj && qObj.options.length < 4 && !line.startsWith("Answer:") && !line.startsWith("Explanation:")) { qObj.options.push(line); return; }
-          if (line.startsWith("Answer:")) { qObj.answer = line.replace("Answer:", "").trim(); return; }
-          if (line.startsWith("Explanation:")) { qObj.explanation = line.replace("Explanation:", "").trim(); return; }
+        const lines = text.split("\n").map(l=>l.trim());
+        let currentCompany="",qObj=null;
+        lines.forEach(line=>{
+          if(!line) return;
+          if(companies.includes(line)){currentCompany=line; if(!questionsData[currentCompany]) questionsData[currentCompany]=[]; qObj=null; return;}
+          if(line.startsWith("Q")){qObj={question:line,options:[],answer:"",explanation:""}; questionsData[currentCompany].push(qObj); return;}
+          if(qObj && qObj.options.length<4 && !line.startsWith("Answer:") && !line.startsWith("Explanation:")){ qObj.options.push(line); return;}
+          if(line.startsWith("Answer:")){ qObj.answer=line.replace("Answer:","").trim(); return;}
+          if(line.startsWith("Explanation:")){ qObj.explanation=line.replace("Explanation:","").trim(); return;}
         });
-      } catch (e) {
-        console.warn("question.txt not found or failed to load. You can still use the test UI.");
-      }
-      const companySelect = document.getElementById("companySelect");
-      companies.forEach(company => {
-        const opt = document.createElement("option");
-        opt.value = company;
-        opt.textContent = company;
-        companySelect.appendChild(opt);
-      });
+      }catch(e){ console.warn("question.txt not found or failed to load."); }
+      const companySelect=document.getElementById("companySelect");
+      companies.forEach(company=>{ const opt=document.createElement("option"); opt.value=company; opt.textContent=company; companySelect.appendChild(opt); });
     }
 
-    function renderQuestions(company) {
-      const questionsArea = document.getElementById("questionsArea");
-      questionsArea.innerHTML = "";
-      if (!company || !questionsData[company] || questionsData[company].length === 0) {
-        questionsArea.innerHTML = `<div class="alert alert-warning">No questions available for ${company}. Updated Soon.</div>`;
+    function renderQuestions(company){
+      const questionsArea=document.getElementById("questionsArea");
+      questionsArea.innerHTML="";
+      if(!company || !questionsData[company] || questionsData[company].length===0){
+        questionsArea.innerHTML=`<div class="alert alert-warning">No questions available for ${company}. Updated Soon.</div>`;
         return;
       }
-      questionsData[company].forEach((q, index) => {
-        const card = document.createElement("div");
-        card.className = "card question-card p-3 shadow-sm";
-        card.innerHTML = `
-          <h5 class="fw-bold">${q.question}</h5>
-          ${q.options.map(opt => `
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="q${index}" value="${opt}" required>
-              <label class="form-check-label">${opt}</label>
-            </div>`).join("")}
-        `;
+      questionsData[company].forEach((q,index)=>{
+        const card=document.createElement("div"); card.className="card question-card p-3 shadow-sm";
+        card.innerHTML=`<h5 class="fw-bold">${q.question}</h5>${q.options.map(opt=>`<div class="form-check"><input class="form-check-input" type="radio" name="q${index}" value="${opt}" required><label class="form-check-label">${opt}</label></div>`).join("")}`;
         questionsArea.appendChild(card);
       });
     }
 
-    function eq(a, b) { return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase(); }
+    function eq(a,b){ return String(a||"").trim().toLowerCase()===String(b||"").trim().toLowerCase(); }
 
-    // Convert Blob -> Base64
-    function blobToBase64(blob) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result); // full dataURL (prefix included)
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
+    async function uploadToCloudinary(blob){
+      const url="https://api.cloudinary.com/v1_1/druxczlqv/video/upload";
+      const formData=new FormData();
+      formData.append("file",blob);
+      formData.append("upload_preset","exam_videos"); // Replace with your preset
+      try{
+        const resp=await fetch(url,{method:"POST",body:formData});
+        const data=await resp.json();
+        return data.secure_url;
+      }catch(err){ console.error("Cloudinary upload failed:",err); return null; }
     }
 
-
-    function showResult(finalData, save = true) {
-      document.getElementById("resName").textContent = finalData.fullname;
-      document.getElementById("resSuccode").textContent = finalData.succode;
-      document.getElementById("resCollege").textContent = finalData.college;
-      document.getElementById("resMobile").textContent = finalData.mobile;
-      document.getElementById("resEmail").textContent = finalData.email;
-      document.getElementById("resCompany").textContent = finalData.company;
-      document.getElementById("resMarks").textContent = finalData.marks;
-      document.getElementById("resStatus").textContent = "Completed";
-      document.getElementById("resExplanations").innerHTML = finalData.explanations || "";
-      const reasonEl = document.getElementById("resReason");
-      if (finalData.reason) { reasonEl.textContent = `Auto-submitted: ${finalData.reason}`; reasonEl.style.display = "block"; } else reasonEl.style.display = "none";
+    async function showResult(finalData, save=true){
+      document.getElementById("resName").textContent=finalData.fullname;
+      document.getElementById("resSuccode").textContent=finalData.succode;
+      document.getElementById("resCollege").textContent=finalData.college;
+      document.getElementById("resMobile").textContent=finalData.mobile;
+      document.getElementById("resEmail").textContent=finalData.email;
+      document.getElementById("resCompany").textContent=finalData.company;
+      document.getElementById("resMarks").textContent=finalData.marks;
+      document.getElementById("resStatus").textContent="Completed";
+      document.getElementById("resExplanations").innerHTML=finalData.explanations||"";
+      const reasonEl=document.getElementById("resReason");
+      if(finalData.reason){ reasonEl.textContent=`Auto-submitted: ${finalData.reason}`; reasonEl.style.display="block"; } else reasonEl.style.display="none";
       document.getElementById("resultArea").classList.remove("d-none");
       document.getElementById("infoForm").classList.add("d-none");
       document.getElementById("examForm").classList.add("d-none");
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-      if (save) { saveResult(finalData); saveCompletedCompany(finalData.company); markCompletedCompanies(); }
+      if(save){ saveResult(finalData); saveCompletedCompany(finalData.company); markCompletedCompanies(); }
     }
 
-    async function gradeExam(reason = "") {
-      if (submitted) return;
-      submitted = true;
-      if (!questionsData[student.company]) return;
-
-      let correct = 0;
-      let explanationsHTML = "";
-      questionsData[student.company].forEach((q, index) => {
-        const selected = document.querySelector(`input[name="q${index}"]:checked`);
-        if (selected && eq(selected.value, q.answer)) correct++;
-        explanationsHTML += `
-          <div class="card mb-2 p-2">
-            <p><b>${q.question}</b></p>
-            <p>✅ Correct Answer: ${q.answer}</p>
-            <p>ℹ️ Explanation: ${q.explanation}</p>
-          </div>`;
+    async function gradeExam(reason=""){
+      if(submitted) return; submitted=true;
+      if(!questionsData[student.company]) return;
+      let correct=0; let explanationsHTML="";
+      questionsData[student.company].forEach((q,index)=>{
+        const selected=document.querySelector(`input[name="q${index}"]:checked`);
+        if(selected && eq(selected.value,q.answer)) correct++;
+        explanationsHTML+=`<div class="card mb-2 p-2"><p><b>${q.question}</b></p><p>✅ Correct Answer: ${q.answer}</p><p>ℹ️ Explanation: ${q.explanation}</p></div>`;
       });
 
-      const finalData = {
-        fullname: student.fullName,
-        succode: student.succode,
-        college: student.college,
-        mobile: student.mobile,
-        email: student.email,
-        company: student.company,
-        marks: `${correct} / ${questionsData[student.company].length}`,
-        completed: "Yes",
-        explanations: explanationsHTML,
-        reason: reason,
-        video: ""
-      };
+      const finalData={fullname:student.fullName,succode:student.succode,college:student.college,mobile:student.mobile,email:student.email,company:student.company,marks:`${correct} / ${questionsData[student.company].length}`,completed:"Yes",explanations:explanationsHTML,reason:reason,video:""};
 
-      try {
-        // 🎥 Stop recording
-        if (mediaRecorder && mediaRecorder.state !== "inactive") {
-          mediaRecorder.stop();
-        }
+      try{
+        if(mediaRecorder && mediaRecorder.state!=="inactive"){ mediaRecorder.stop(); }
+        const videoBlob=new Blob(recordedChunks,{type:"video/webm"});
+        const videoURL=await uploadToCloudinary(videoBlob);
+        finalData.video=videoURL;
 
-        // Convert chunks to blob
-        const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
-        const base64Video = await blobToBase64(videoBlob);
-        finalData.video = base64Video;
+        const resp=await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(finalData)});
+        const json=await resp.json();
+        if(json && json.success && json.id){ finalData.id=json.id; }
+      }catch(err){ console.error("Error sending to backend:", err); }
 
-        const resp = await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(finalData)
-        });
-        const json = await resp.json();
-        if (json && json.success && json.id) {
-          finalData.id = json.id;
-        }
-      } catch (err) {
-        console.error("Error sending to backend:", err);
-      }
-
-      showResult(finalData, true);
+      showResult(finalData,true);
     }
 
-    // ---------- Events ----------
-    document.getElementById("infoForm").addEventListener("submit", async e => {
+    document.getElementById("infoForm").addEventListener("submit",async e=>{
       e.preventDefault();
-      student.fullName = document.getElementById("fullName").value;
-      student.succode = document.getElementById("succode").value;
-      student.college = document.getElementById("college").value;
-      student.mobile = document.getElementById("mobile").value;
-      student.email = document.getElementById("email").value;
-      student.company = document.getElementById("companySelect").value;
-      if (!student.company) { alert("Please select a company"); return; }
+      student.fullName=document.getElementById("fullName").value;
+      student.succode=document.getElementById("succode").value;
+      student.college=document.getElementById("college").value;
+      student.mobile=document.getElementById("mobile").value;
+      student.email=document.getElementById("email").value;
+      student.company=document.getElementById("companySelect").value;
+      if(!student.company){ alert("Please select a company"); return; }
       document.getElementById("infoForm").classList.add("d-none");
       document.getElementById("examForm").classList.remove("d-none");
       renderQuestions(student.company);
 
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 }, audio: true });
-        document.getElementById("videoPreview").srcObject = stream;
-        mediaRecorder = new MediaRecorder(stream);
-        recordedChunks = [];
-        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
+      try{
+        const stream=await navigator.mediaDevices.getUserMedia({video:{width:320,height:240},audio:true});
+        document.getElementById("videoPreview").srcObject=stream;
+        mediaRecorder=new MediaRecorder(stream);
+        recordedChunks=[];
+        mediaRecorder.ondataavailable=e=>{ if(e.data.size>0) recordedChunks.push(e.data); };
         mediaRecorder.start();
-      } catch (err) {
-        alert("Camera/Microphone access denied. Exam cannot continue.");
-      }
+      }catch(err){ alert("Camera/Microphone access denied. Exam cannot continue."); }
     });
 
-    document.getElementById("examForm").addEventListener("submit", e => { e.preventDefault(); gradeExam(""); });
-
-    document.addEventListener("visibilitychange", () => { if (document.hidden && !submitted) gradeExam("Tab/window change detected."); });
-
-    document.getElementById("homeBtn").addEventListener("click", () => {
+    document.getElementById("examForm").addEventListener("submit",e=>{ e.preventDefault(); gradeExam(""); });
+    document.addEventListener("visibilitychange",()=>{ if(document.hidden && !submitted) gradeExam("Tab/window change detected."); });
+    document.getElementById("homeBtn").addEventListener("click",()=>{
       document.getElementById("resultArea").classList.add("d-none");
       document.getElementById("infoForm").classList.remove("d-none");
       markCompletedCompanies();
     });
 
-    loadQuestions();
-    markCompletedCompanies();
+    loadQuestions(); markCompletedCompanies();
   </script>
 </body>
-
 </html>
