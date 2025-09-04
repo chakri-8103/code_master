@@ -286,6 +286,15 @@
       if (submitted) return; submitted = true;
       if (!questionsData[student.company]) return;
       console.log("Grading exam for:", student.company);
+
+      // Stop media recorder properly
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        await new Promise(resolve => { mediaRecorder.onstop = resolve; mediaRecorder.stop(); });
+      }
+
+      const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
+      console.log("Recorded video blob:", videoBlob);
+
       let correct = 0; let explanationsHTML = "";
       questionsData[student.company].forEach((q, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
@@ -293,17 +302,29 @@
         explanationsHTML += `<div class="card mb-2 p-2"><p><b>${q.question}</b></p><p>✅ Correct Answer: ${q.answer}</p><p>ℹ️ Explanation: ${q.explanation}</p></div>`;
       });
 
-      const finalData = { fullname: student.fullName, succode: student.succode, college: student.college, mobile: student.mobile, email: student.email, company: student.company, marks: `${correct} / ${questionsData[student.company].length}`, completed: "Yes", explanations: explanationsHTML, reason: reason, video: "" };
+      const finalData = {
+        fullname: student.fullName,
+        succode: student.succode,
+        college: student.college,
+        mobile: student.mobile,
+        email: student.email,
+        company: student.company,
+        marks: `${correct} / ${questionsData[student.company].length}`,
+        completed: "Yes",
+        explanations: explanationsHTML,
+        reason: reason,
+        video: ""
+      };
 
       try {
-        if (mediaRecorder && mediaRecorder.state !== "inactive") { mediaRecorder.stop(); }
-        const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
-        console.log("Recorded video blob:", videoBlob);
         const videoURL = await uploadToCloudinary(videoBlob);
         finalData.video = videoURL;
 
-        console.log("Sending final exam data to backend:", finalData);
-        const resp = await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(finalData) });
+        const resp = await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(finalData)
+        });
         const json = await resp.json();
         console.log("Backend response:", json);
         if (json && json.success && json.id) { finalData.id = json.id; showToast(finalData.video ? "✅ Video URL sent successfully!" : "⚠️ No video recorded.", true); }
@@ -330,6 +351,10 @@
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 }, audio: true });
         document.getElementById("videoPreview").srcObject = stream;
+
+        // Save tracks for stopping later
+        window._mediaStreamTracks = stream.getTracks();
+
         mediaRecorder = new MediaRecorder(stream);
         recordedChunks = [];
         mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
@@ -339,8 +364,17 @@
     });
 
     document.getElementById("examForm").addEventListener("submit", e => { e.preventDefault(); gradeExam(""); });
+
+    // Auto-submit if tab/window changed
     document.addEventListener("visibilitychange", () => { if (document.hidden && !submitted) gradeExam("Tab/window change detected."); });
-    document.getElementById("homeBtn").addEventListener("click", () => { document.getElementById("resultArea").classList.add("d-none"); document.getElementById("infoForm").classList.remove("d-none"); markCompletedCompanies(); });
+
+    document.getElementById("homeBtn").addEventListener("click", () => {
+      // Stop camera/audio if still active
+      if (window._mediaStreamTracks) window._mediaStreamTracks.forEach(track => track.stop());
+      document.getElementById("resultArea").classList.add("d-none");
+      document.getElementById("infoForm").classList.remove("d-none");
+      markCompletedCompanies();
+    });
 
     loadQuestions(); markCompletedCompanies();
   </script>
