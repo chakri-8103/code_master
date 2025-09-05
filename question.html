@@ -143,7 +143,6 @@
         email: localStorage.getItem("email"),
         year: localStorage.getItem("year")
       };
-      console.log("Loaded student info:", studentData);
       if (studentData.fullName) document.getElementById("fullName").value = studentData.fullName;
       if (studentData.succode) document.getElementById("succode").value = studentData.succode;
       if (studentData.college) document.getElementById("college").value = studentData.college;
@@ -159,7 +158,7 @@
     document.addEventListener("keydown", e => {
       const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "s", "S"];
       if (e.key === "F12" || e.key === "PrintScreen" || (e.ctrlKey && blockedCtrl.includes(e.key)) || (e.ctrlKey && e.shiftKey && (e.key === "i" || e.key === "I"))) {
-        e.preventDefault(); console.log("Blocked key press:", e.key); alert("⚠️ This action is disabled during the exam!");
+        e.preventDefault(); alert("⚠️ This action is disabled during the exam!");
       }
     });
 
@@ -167,9 +166,9 @@
     const companies = ["WIPRO - Quantitative Aptitude", "WIPRO - Verbal Ability", "WIPRO - Logical Reasoning"];
 
     function saveResult(data) {
-      console.log("Saving result:", data);
       let results = JSON.parse(localStorage.getItem("examResults") || "[]");
-      results = results.filter(r => r.company !== data.company); results.push(data);
+      results = results.filter(r => r.company !== data.company);
+      results.push(data);
       localStorage.setItem("examResults", JSON.stringify(results));
     }
 
@@ -179,7 +178,6 @@
     }
 
     function saveCompletedCompany(company) {
-      console.log("Marking company completed:", company);
       let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
       if (!completed.includes(company)) { completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); }
     }
@@ -200,6 +198,30 @@
       } else { listDiv.innerHTML = ""; }
       const companySelect = document.getElementById("companySelect");
       [...companySelect.options].forEach(opt => { if (completed.includes(opt.value)) opt.remove(); });
+    }
+
+    // ======= Updated loadQuestions =======
+    async function loadQuestions() {
+      try {
+        const response = await fetch("question.txt");
+        const text = await response.text();
+        const lines = text.split("\n").map(l => l.trim());
+        let currentCompany = "", qObj = null;
+
+        lines.forEach(line => {
+          if (!line) return;
+          if (companies.includes(line)) { currentCompany = line; if (!questionsData[currentCompany]) questionsData[currentCompany] = []; qObj = null; return; }
+          if (line.startsWith("Q")) { qObj = { question: line, options: [], answer: "", explanation: "" }; questionsData[currentCompany].push(qObj); return; }
+
+          // Collect all lines before Answer/Explanation as options
+          if (qObj && !line.startsWith("Answer:") && !line.startsWith("Explanation:")) { qObj.options.push(line); return; }
+          if (line.startsWith("Answer:")) { qObj.answer = line.replace("Answer:", "").trim(); return; }
+          if (line.startsWith("Explanation:")) { qObj.explanation = line.replace("Explanation:", "").trim(); return; }
+        });
+      } catch (e) { console.warn("question.txt failed to load:", e); }
+
+      const companySelect = document.getElementById("companySelect");
+      companies.forEach(company => { const opt = document.createElement("option"); opt.value = company; opt.textContent = company; companySelect.appendChild(opt); });
     }
 
     async function loadQuestions() {
