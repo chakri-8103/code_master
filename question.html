@@ -65,6 +65,7 @@
       <p class="text-muted">Answer all questions carefully</p>
     </div>
 
+    <!-- Student Info Form -->
     <form id="infoForm" autocomplete="off">
       <div class="card mb-3 p-3"><label class="form-label fw-bold">Full Name</label><input type="text"
           class="form-control" id="fullName" readonly></div>
@@ -88,6 +89,7 @@
       <div id="completedList" class="mt-4"></div>
     </form>
 
+    <!-- Exam Form -->
     <form id="examForm" class="d-none" autocomplete="off">
       <div class="row">
         <div class="col-md-4 text-center"><video id="videoPreview" autoplay muted></video></div>
@@ -100,6 +102,7 @@
       </div>
     </form>
 
+    <!-- Result Area -->
     <div id="resultArea" class="result-card d-none">
       <div class="card p-4 shadow-sm">
         <h4 class="fw-bold">Exam Result</h4>
@@ -119,6 +122,7 @@
     </div>
   </div>
 
+  <!-- Toast -->
   <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1100;">
     <div id="submitToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive"
       aria-atomic="true">
@@ -134,6 +138,18 @@
   <script>
     console.log("Exam page loaded");
 
+    // Disable copy/paste/right-click
+    document.addEventListener("contextmenu", e => e.preventDefault());
+    ["copy", "paste", "cut"].forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
+    document.addEventListener("keydown", e => {
+      const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "s", "S"];
+      if (e.key === "F12" || e.key === "PrintScreen" || (e.ctrlKey && blockedCtrl.includes(e.key)) || (e.ctrlKey && e.shiftKey && (e.key === "i" || e.key === "I"))) { e.preventDefault(); alert("⚠️ This action is disabled during the exam!"); }
+    });
+
+    let questionsData = {}, submitted = false, mediaRecorder, recordedChunks = [], student = { fullName: "", succode: "", college: "", mobile: "", email: "", company: "" };
+    const companies = ["WIPRO - Quantitative Aptitude", "WIPRO - Verbal Ability", "WIPRO - Logical Reasoning"];
+
+    // ====== Load Student Info ======
     function loadStudentInfo() {
       const studentData = {
         fullName: localStorage.getItem("name"),
@@ -143,173 +159,64 @@
         email: localStorage.getItem("email"),
         year: localStorage.getItem("year")
       };
-      if (studentData.fullName) document.getElementById("fullName").value = studentData.fullName;
-      if (studentData.succode) document.getElementById("succode").value = studentData.succode;
-      if (studentData.college) document.getElementById("college").value = studentData.college;
-      if (studentData.mobile) document.getElementById("mobile").value = studentData.mobile;
-      if (studentData.email) document.getElementById("email").value = studentData.email;
-      if (studentData.year) document.getElementById("year").value = studentData.year;
+      Object.keys(studentData).forEach(k => { if (studentData[k]) document.getElementById(k === "fullName" ? "fullName" : k).value = studentData[k]; });
     }
     loadStudentInfo();
 
-    // Disable right-click, copy, paste, screenshots
-    document.addEventListener("contextmenu", e => e.preventDefault());
-    ["copy", "paste", "cut"].forEach(evt => document.addEventListener(evt, e => e.preventDefault()));
-    document.addEventListener("keydown", e => {
-      const blockedCtrl = ["u", "U", "c", "C", "v", "V", "x", "X", "s", "S"];
-      if (e.key === "F12" || e.key === "PrintScreen" || (e.ctrlKey && blockedCtrl.includes(e.key)) || (e.ctrlKey && e.shiftKey && (e.key === "i" || e.key === "I"))) {
-        e.preventDefault(); alert("⚠️ This action is disabled during the exam!");
-      }
-    });
+    // ====== Local Storage Helpers ======
+    function saveResult(data) { let results = JSON.parse(localStorage.getItem("examResults") || "[]"); results = results.filter(r => r.company !== data.company); results.push(data); localStorage.setItem("examResults", JSON.stringify(results)); }
+    function getResult(company) { return JSON.parse(localStorage.getItem("examResults") || "[]").find(r => r.company === company); }
+    function saveCompletedCompany(company) { let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]"); if (!completed.includes(company)) { completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); } }
+    function markCompletedCompanies() { let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]"); const listDiv = document.getElementById("completedList"); if (completed.length > 0) { listDiv.innerHTML = "<h6>✅ Completed Tests</h6><ul class='list-group'>" + completed.map(c => `<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("") + "</ul>"; document.querySelectorAll(".completed-item").forEach(item => { item.addEventListener("click", () => { const comp = item.getAttribute("data-company"); const res = getResult(comp); if (res) showResult(res, false); }); }); } else listDiv.innerHTML = ""; const companySelect = document.getElementById("companySelect");[...companySelect.options].forEach(opt => { if (completed.includes(opt.value)) opt.remove(); }); }
 
-    let questionsData = {}, submitted = false, mediaRecorder, recordedChunks = [], student = { fullName: "", succode: "", college: "", mobile: "", email: "", company: "" };
-    const companies = ["WIPRO - Quantitative Aptitude", "WIPRO - Verbal Ability", "WIPRO - Logical Reasoning"];
-
-    function saveResult(data) {
-      let results = JSON.parse(localStorage.getItem("examResults") || "[]");
-      results = results.filter(r => r.company !== data.company);
-      results.push(data);
-      localStorage.setItem("examResults", JSON.stringify(results));
-    }
-
-    function getResult(company) {
-      let results = JSON.parse(localStorage.getItem("examResults") || "[]");
-      return results.find(r => r.company === company);
-    }
-
-    function saveCompletedCompany(company) {
-      let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
-      if (!completed.includes(company)) { completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); }
-    }
-
-    function markCompletedCompanies() {
-      let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]");
-      const listDiv = document.getElementById("completedList");
-      if (completed.length > 0) {
-        listDiv.innerHTML = "<h6>✅ Completed Tests</h6><ul class='list-group'>" +
-          completed.map(c => `<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("") + "</ul>";
-        document.querySelectorAll(".completed-item").forEach(item => {
-          item.addEventListener("click", () => {
-            const comp = item.getAttribute("data-company");
-            const res = getResult(comp);
-            if (res) showResult(res, false);
-          });
-        });
-      } else { listDiv.innerHTML = ""; }
-      const companySelect = document.getElementById("companySelect");
-      [...companySelect.options].forEach(opt => { if (completed.includes(opt.value)) opt.remove(); });
-    }
-
-    // ======= Updated loadQuestions =======
+    // ====== Load Questions ======
     async function loadQuestions() {
       try {
         const response = await fetch("question.txt");
         const text = await response.text();
         const lines = text.split("\n").map(l => l.trim());
         let currentCompany = "", qObj = null;
-
         lines.forEach(line => {
           if (!line) return;
           if (companies.includes(line)) { currentCompany = line; if (!questionsData[currentCompany]) questionsData[currentCompany] = []; qObj = null; return; }
           if (line.startsWith("Q")) { qObj = { question: line, options: [], answer: "", explanation: "" }; questionsData[currentCompany].push(qObj); return; }
-
-          // Collect all lines before Answer/Explanation as options
-          if (qObj && !line.startsWith("Answer:") && !line.startsWith("Explanation:")) { qObj.options.push(line); return; }
-          if (line.startsWith("Answer:")) { qObj.answer = line.replace("Answer:", "").trim(); return; }
-          if (line.startsWith("Explanation:")) { qObj.explanation = line.replace("Explanation:", "").trim(); return; }
-        });
-      } catch (e) { console.warn("question.txt failed to load:", e); }
-
-      const companySelect = document.getElementById("companySelect");
-      companies.forEach(company => { const opt = document.createElement("option"); opt.value = company; opt.textContent = company; companySelect.appendChild(opt); });
-    }
-
-    async function loadQuestions() {
-      try {
-        const response = await fetch("question.txt");
-        const text = await response.text();
-        console.log("Loaded question.txt:", text.slice(0, 100), "...");
-        const lines = text.split("\n").map(l => l.trim());
-        let currentCompany = "", qObj = null;
-        lines.forEach(line => {
-          if (!line) return;
-          if (companies.includes(line)) { currentCompany = line; if (!questionsData[currentCompany]) questionsData[currentCompany] = []; qObj = null; return; }
-          if (line.startsWith("Q")) { qObj = { question: line, options: [], answer: "", explanation: "" }; questionsData[currentCompany].push(qObj); return; }
-          if (qObj && qObj.options.length < 4 && !line.startsWith("Answer:") && !line.startsWith("Explanation:")) { qObj.options.push(line); return; }
-          if (line.startsWith("Answer:")) { qObj.answer = line.replace("Answer:", "").trim(); return; }
-          if (line.startsWith("Explanation:")) { qObj.explanation = line.replace("Explanation:", "").trim(); return; }
+          if (qObj && !line.startsWith("Answer:") && !line.startsWith("Explanation:")) qObj.options.push(line);
+          if (line.startsWith("Answer:")) qObj.answer = line.replace("Answer:", "").trim();
+          if (line.startsWith("Explanation:")) qObj.explanation = line.replace("Explanation:", "").trim();
         });
       } catch (e) { console.warn("question.txt failed to load:", e); }
       const companySelect = document.getElementById("companySelect");
       companies.forEach(company => { const opt = document.createElement("option"); opt.value = company; opt.textContent = company; companySelect.appendChild(opt); });
     }
 
+    // ====== Render Questions ======
     function renderQuestions(company) {
       const questionsArea = document.getElementById("questionsArea");
       questionsArea.innerHTML = "";
-
-      if (!company || !questionsData[company] || questionsData[company].length === 0) {
-        questionsArea.innerHTML = `<div class="alert alert-warning">No questions available for ${company}. Updated Soon.</div>`;
-        return;
-      }
-
+      if (!company || !questionsData[company] || questionsData[company].length === 0) { questionsArea.innerHTML = `<div class="alert alert-warning">No questions available for ${company}. Updated Soon.</div>`; return; }
       questionsData[company].forEach((q, index) => {
-        const card = document.createElement("div");
-        card.className = "card question-card p-3 shadow-sm";
-
+        const card = document.createElement("div"); card.className = "card question-card p-3 shadow-sm";
         let html = `<h5 class="fw-bold mb-2">${q.question}</h5>`;
-
         q.options.forEach(opt => {
-          // Show lines starting with "Statement:" or "Conclusions:" as bold headings
-          if (/^(Statement:|Conclusions:)/i.test(opt)) {
-            html += `<p class="fw-bold mb-1">${opt}</p>`;
-          }
-          // Show lines starting with "Input:" or "Output:" or "Given:" as normal text
-          else if (/^(Input:|Output:|Given:)/i.test(opt)) {
-            html += `<p class="mb-1">${opt}</p>`;
-          }
-          // Otherwise treat as an option
-          else {
-            html += `<div class="form-check mb-1">
-                  <input class="form-check-input" type="radio" name="q${index}" value="${opt}" required>
-                  <label class="form-check-label">${opt}</label>
-                 </div>`;
-          }
+          if (/^(Statement:|Conclusions:)/i.test(opt)) html += `<p class="fw-bold mb-1">${opt}</p>`;
+          else if (/^(Input:|Output:|Given:)/i.test(opt)) html += `<p class="mb-1">${opt}</p>`;
+          else html += `<div class="form-check mb-1"><input class="form-check-input" type="radio" name="q${index}" value="${opt}" required><label class="form-check-label">${opt}</label></div>`;
         });
-
         card.innerHTML = html;
         questionsArea.appendChild(card);
       });
     }
 
-
+    // ====== Helpers ======
     function eq(a, b) { return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase(); }
-
     async function uploadToCloudinary(blob) {
-      console.log("Uploading to Cloudinary, blob size:", blob.size);
       const url = "https://api.cloudinary.com/v1_1/druxczlqv/video/upload";
-      const formData = new FormData();
-      formData.append("file", blob);
-      formData.append("upload_preset", "exam_videos");
-      try {
-        const resp = await fetch(url, { method: "POST", body: formData });
-        const data = await resp.json();
-        console.log("Cloudinary response:", data);
-        return data.secure_url;
-      } catch (err) { console.error("Cloudinary upload failed:", err); return null; }
+      const formData = new FormData(); formData.append("file", blob); formData.append("upload_preset", "exam_videos");
+      try { const resp = await fetch(url, { method: "POST", body: formData }); const data = await resp.json(); return data.secure_url; } catch (err) { console.error(err); return null; }
     }
-
-    function showToast(message, success = true) {
-      const toastEl = document.getElementById("submitToast");
-      const toastBody = document.getElementById("toastMessage");
-      toastBody.textContent = message;
-      toastEl.classList.remove("text-bg-success", "text-bg-danger");
-      toastEl.classList.add(success ? "text-bg-success" : "text-bg-danger");
-      new bootstrap.Toast(toastEl).show();
-    }
+    function showToast(message, success = true) { const toastEl = document.getElementById("submitToast"); const toastBody = document.getElementById("toastMessage"); toastBody.textContent = message; toastEl.classList.remove("text-bg-success", "text-bg-danger"); toastEl.classList.add(success ? "text-bg-success" : "text-bg-danger"); new bootstrap.Toast(toastEl).show(); }
 
     async function showResult(finalData, save = true) {
-      console.log("Showing result:", finalData);
       document.getElementById("resName").textContent = finalData.fullname;
       document.getElementById("resSuccode").textContent = finalData.succode;
       document.getElementById("resCollege").textContent = finalData.college;
@@ -320,8 +227,7 @@
       document.getElementById("resStatus").textContent = "Completed";
       document.getElementById("resExplanations").innerHTML = finalData.explanations || "";
       const reasonEl = document.getElementById("resReason");
-      if (finalData.reason) { reasonEl.textContent = `Auto-submitted: ${finalData.reason}`; reasonEl.style.display = "block"; }
-      else reasonEl.style.display = "none";
+      if (finalData.reason) { reasonEl.textContent = `Auto-submitted: ${finalData.reason}`; reasonEl.style.display = "block"; } else reasonEl.style.display = "none";
       document.getElementById("resultArea").classList.remove("d-none");
       document.getElementById("infoForm").classList.add("d-none");
       document.getElementById("examForm").classList.add("d-none");
@@ -332,65 +238,30 @@
     async function gradeExam(reason = "") {
       if (submitted) return; submitted = true;
       if (!questionsData[student.company]) return;
-      console.log("Grading exam for:", student.company);
-
-      // Stop media recorder properly
-      if (mediaRecorder && mediaRecorder.state !== "inactive") {
-        await new Promise(resolve => { mediaRecorder.onstop = resolve; mediaRecorder.stop(); });
-      }
-
+      if (mediaRecorder && mediaRecorder.state !== "inactive") await new Promise(resolve => { mediaRecorder.onstop = resolve; mediaRecorder.stop(); });
       const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
-      console.log("Recorded video blob:", videoBlob);
-
-      let correct = 0; let explanationsHTML = "";
+      let correct = 0, explanationsHTML = "";
       questionsData[student.company].forEach((q, index) => {
         const selected = document.querySelector(`input[name="q${index}"]:checked`);
         if (selected && eq(selected.value, q.answer)) correct++;
         explanationsHTML += `<div class="card mb-2 p-2"><p><b>${q.question}</b></p><p>✅ Correct Answer: ${q.answer}</p><p>ℹ️ Explanation: ${q.explanation}</p></div>`;
       });
-
-      const finalData = {
-        fullname: student.fullName,
-        succode: student.succode,
-        college: student.college,
-        mobile: student.mobile,
-        email: student.email,
-        company: student.company,
-        marks: `${correct} / ${questionsData[student.company].length}`,
-        completed: "Yes",
-        explanations: explanationsHTML,
-        reason: reason,
-        video: ""
-      };
-
+      const finalData = { fullname: student.fullName, succode: student.succode, college: student.college, mobile: student.mobile, email: student.email, company: student.company, marks: `${correct} / ${questionsData[student.company].length}`, completed: "Yes", explanations: explanationsHTML, reason: reason, video: "" };
       try {
-        const videoURL = await uploadToCloudinary(videoBlob);
-        finalData.video = videoURL;
-
-        const resp = await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(finalData)
-        });
+        finalData.video = await uploadToCloudinary(videoBlob);
+        const resp = await fetch("https://3c1d63f2ac49.ngrok-free.app/submitExam", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(finalData) });
         const json = await resp.json();
-        console.log("Backend response:", json);
-        if (json && json.success && json.id) { finalData.id = json.id; showToast(finalData.video ? "✅ Video URL sent successfully!" : "⚠️ No video recorded.", true); }
-        else { showToast("❌ Submission failed!", false); }
-      } catch (err) { console.error("Error sending to backend:", err); showToast("❌ Submission failed!", false); }
-
+        if (json && json.success && json.id) { finalData.id = json.id; showToast(finalData.video ? "✅ Video URL sent successfully!" : "⚠️ No video recorded.", true); } else showToast("❌ Submission failed!", false);
+      } catch (err) { console.error(err); showToast("❌ Submission failed!", false); }
       showResult(finalData, true);
     }
 
+    // ====== Event Listeners ======
     document.getElementById("infoForm").addEventListener("submit", async e => {
       e.preventDefault();
-      student.fullName = document.getElementById("fullName").value;
-      student.succode = document.getElementById("succode").value;
-      student.college = document.getElementById("college").value;
-      student.mobile = document.getElementById("mobile").value;
-      student.email = document.getElementById("email").value;
+      ["fullName", "succode", "college", "mobile", "email"].forEach(k => student[k] = document.getElementById(k).value);
       student.company = document.getElementById("companySelect").value;
       if (!student.company) { alert("Please select a company"); return; }
-      console.log("Starting exam for student:", student);
       document.getElementById("infoForm").classList.add("d-none");
       document.getElementById("examForm").classList.remove("d-none");
       renderQuestions(student.company);
@@ -398,30 +269,17 @@
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 }, audio: true });
         document.getElementById("videoPreview").srcObject = stream;
-
-        // Save tracks for stopping later
         window._mediaStreamTracks = stream.getTracks();
-
         mediaRecorder = new MediaRecorder(stream);
         recordedChunks = [];
         mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
         mediaRecorder.start();
-        console.log("MediaRecorder started", mediaRecorder);
-      } catch (err) { console.error("Camera/Mic access denied:", err); alert("Camera/Microphone access denied. Exam cannot continue."); location.reload(); }
+      } catch (err) { console.error(err); alert("Camera/Microphone access denied. Exam cannot continue."); location.reload(); }
     });
 
     document.getElementById("examForm").addEventListener("submit", e => { e.preventDefault(); gradeExam(""); });
-
-    // Auto-submit if tab/window changed
     document.addEventListener("visibilitychange", () => { if (document.hidden && !submitted) gradeExam("Tab/window change detected."); });
-
-    document.getElementById("homeBtn").addEventListener("click", () => {
-      // Stop camera/audio if still active
-      if (window._mediaStreamTracks) window._mediaStreamTracks.forEach(track => track.stop());
-      document.getElementById("resultArea").classList.add("d-none");
-      document.getElementById("infoForm").classList.remove("d-none");
-      markCompletedCompanies();
-    });
+    document.getElementById("homeBtn").addEventListener("click", () => { if (window._mediaStreamTracks) window._mediaStreamTracks.forEach(track => track.stop()); document.getElementById("resultArea").classList.add("d-none"); document.getElementById("infoForm").classList.remove("d-none"); markCompletedCompanies(); });
 
     loadQuestions(); markCompletedCompanies();
   </script>
