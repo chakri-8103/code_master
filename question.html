@@ -206,16 +206,23 @@
         const card = document.createElement("div"); card.className = "card question-card p-3 shadow-sm";
         let html = `<h5 class="fw-bold mb-2">${q.question}</h5>`;
         q.options.forEach(opt => {
-          // Skip headings like "Options:", "Conclusions:", "Statement:", etc.
+          // Check if the option is a heading
           if (/^(Options:|Conclusions:|Statement:|Input:|Output:|Given:)/i.test(opt)) {
             html += `<p class="fw-bold mb-1">${opt}</p>`;
-          } else {
+          }
+          // Check if it is an actual option under "Options:"
+          else if (/^a\)|b\)|c\)|d\)/i.test(opt.trim())) {
             html += `<div class="form-check mb-1">
                <input class="form-check-input" type="radio" name="q${index}" value="${opt}" required>
                <label class="form-check-label">${opt}</label>
              </div>`;
           }
+          // Anything else (like conclusions) remain plain text
+          else {
+            html += `<p class="mb-1">${opt}</p>`;
+          }
         });
+
 
         card.innerHTML = html;
         questionsArea.appendChild(card);
