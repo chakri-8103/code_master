@@ -1,3 +1,4 @@
+WIPRO
 Q1. Find the least number which when divided by 12, 16, 18 leaves remainder 5 in each case.
 Options:
 a) 144
