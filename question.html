@@ -245,18 +245,43 @@
     }
 
     function renderQuestions(company) {
-      console.log("Rendering questions for:", company);
-      const questionsArea = document.getElementById("questionsArea"); questionsArea.innerHTML = "";
+      const questionsArea = document.getElementById("questionsArea");
+      questionsArea.innerHTML = "";
+
       if (!company || !questionsData[company] || questionsData[company].length === 0) {
         questionsArea.innerHTML = `<div class="alert alert-warning">No questions available for ${company}. Updated Soon.</div>`;
         return;
       }
+
       questionsData[company].forEach((q, index) => {
-        const card = document.createElement("div"); card.className = "card question-card p-3 shadow-sm";
-        card.innerHTML = `<h5 class="fw-bold">${q.question}</h5>${q.options.map(opt => `<div class="form-check"><input class="form-check-input" type="radio" name="q${index}" value="${opt}" required><label class="form-check-label">${opt}</label></div>`).join("")}`;
+        const card = document.createElement("div");
+        card.className = "card question-card p-3 shadow-sm";
+
+        let html = `<h5 class="fw-bold mb-2">${q.question}</h5>`;
+
+        q.options.forEach(opt => {
+          // Show lines starting with "Statement:" or "Conclusions:" as bold headings
+          if (/^(Statement:|Conclusions:)/i.test(opt)) {
+            html += `<p class="fw-bold mb-1">${opt}</p>`;
+          }
+          // Show lines starting with "Input:" or "Output:" or "Given:" as normal text
+          else if (/^(Input:|Output:|Given:)/i.test(opt)) {
+            html += `<p class="mb-1">${opt}</p>`;
+          }
+          // Otherwise treat as an option
+          else {
+            html += `<div class="form-check mb-1">
+                  <input class="form-check-input" type="radio" name="q${index}" value="${opt}" required>
+                  <label class="form-check-label">${opt}</label>
+                 </div>`;
+          }
+        });
+
+        card.innerHTML = html;
         questionsArea.appendChild(card);
       });
     }
+
 
     function eq(a, b) { return String(a || "").trim().toLowerCase() === String(b || "").trim().toLowerCase(); }
 
