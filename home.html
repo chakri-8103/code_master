@@ -5,62 +5,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f9;
-      color: #333;
-      text-align: center;
-    }
-
-    header {
-      background: #007bff;
-      color: white;
-      padding: 20px;
-    }
-
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: white;
-      font-weight: bold;
-    }
-
-    main {
-      padding: 40px;
-    }
-
-    footer {
-      background: #222;
-      color: white;
-      padding: 15px;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-    }
-  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
-  <header>
-    <h1>Welcome to My Website</h1>
-    <nav>
-      <a href="home.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
 
-  <main>
-    <h2>Home Page</h2>
-    <p>This is a simple home page template. You can add your own content here.</p>
-  </main>
+  <div class="card shadow-lg border-0 rounded-4" style="width: 24rem;">
+    <div class="card-body text-center">
+      <h4 class="card-title mb-4 fw-bold text-primary">User Details</h4>
 
-  <footer>
-    <p>&copy; 2025 My Website. All Rights Reserved.</p>
-  </footer>
+      <div class="list-group text-start mb-4">
+        <div class="list-group-item d-flex justify-content-between">
+          <strong>Name:</strong> <span id="userName">-</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between">
+          <strong>Email:</strong> <span id="userEmail">-</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between">
+          <strong>SUC Code:</strong> <span id="userSuc">-</span>
+        </div>
+      </div>
+
+      <button id="startBtn" class="btn btn-primary btn-lg w-100 rounded-3">
+        🚀 Get Started
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Example values (remove if already set elsewhere)
+    // localStorage.setItem("name", "Chakri");
+    // localStorage.setItem("email", "chakri@example.com");
+    // localStorage.setItem("sucCode", "SUC12345");
+
+    // Display values
+    document.getElementById("userName").textContent = localStorage.getItem("name") || "Not Found";
+    document.getElementById("userEmail").textContent = localStorage.getItem("email") || "Not Found";
+    document.getElementById("userSuc").textContent = localStorage.getItem("sucCode") || "Not Found";
+
+    // Redirect on button click
+    document.getElementById("startBtn").addEventListener("click", () => {
+      window.location.href = "question.html";
+    });
+  </script>
+
 </body>
 
 </html>
