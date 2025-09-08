@@ -299,7 +299,11 @@
 
     document.getElementById("examForm").addEventListener("submit", e => { e.preventDefault(); gradeExam(""); });
     document.addEventListener("visibilitychange", () => { if (document.hidden && !submitted) gradeExam("Tab/window change detected."); });
-    document.getElementById("homeBtn").addEventListener("click", () => { if (window._mediaStreamTracks) window._mediaStreamTracks.forEach(track => track.stop()); document.getElementById("resultArea").classList.add("d-none"); document.getElementById("infoForm").classList.remove("d-none"); markCompletedCompanies(); });
+    document.getElementById("homeBtn").addEventListener("click", () => {
+      if (window._mediaStreamTracks) window._mediaStreamTracks.forEach(track => track.stop());
+      window.location.href = "home.html";
+      markCompletedCompanies();
+    });
 
     loadQuestions(); markCompletedCompanies();
   </script>
