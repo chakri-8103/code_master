@@ -42,21 +42,6 @@
       z-index: 10;
     }
 
-    .completed-item {
-      cursor: pointer;
-    }
-
-    .completed-item:hover {
-      background: #e9ecef;
-    }
-
-    #questionsWrapper {
-      max-height: 500px;
-      overflow-y: auto;
-      padding-right: 10px;
-    }
-
-    /* Darker radio buttons */
     .form-check-input {
       accent-color: #343a40;
       width: 1.2em;
@@ -67,6 +52,12 @@
     .form-check-label {
       margin-left: 0.3em;
       font-weight: 500;
+    }
+
+    #questionsWrapper {
+      max-height: 500px;
+      overflow-y: auto;
+      padding-right: 10px;
     }
   </style>
 </head>
@@ -99,7 +90,6 @@
         </select>
       </div>
       <div class="submit-btn"><button type="submit" class="btn btn-primary btn-lg">Start Exam</button></div>
-      <div id="completedList" class="mt-4"></div>
     </form>
 
     <!-- Exam Form -->
@@ -174,11 +164,6 @@
     }
     loadStudentInfo();
 
-    function saveResult(data) { let results = JSON.parse(localStorage.getItem("examResults") || "[]"); results = results.filter(r => r.company !== data.company); results.push(data); localStorage.setItem("examResults", JSON.stringify(results)); }
-    function getResult(company) { return JSON.parse(localStorage.getItem("examResults") || "[]").find(r => r.company === company); }
-    function saveCompletedCompany(company) { let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]"); if (!completed.includes(company)) { completed.push(company); localStorage.setItem("completedCompanies", JSON.stringify(completed)); } }
-    function markCompletedCompanies() { let completed = JSON.parse(localStorage.getItem("completedCompanies") || "[]"); const listDiv = document.getElementById("completedList"); if (completed.length > 0) { listDiv.innerHTML = "<h6>✅ Completed Tests</h6><ul class='list-group'>" + completed.map(c => `<li class="list-group-item completed-item" data-company="${c}">${c} ✅</li>`).join("") + "</ul>"; document.querySelectorAll(".completed-item").forEach(item => { item.addEventListener("click", () => { const comp = item.getAttribute("data-company"); const res = getResult(comp); if (res) showResult(res, false); }); }); } else listDiv.innerHTML = ""; const companySelect = document.getElementById("companySelect");[...companySelect.options].forEach(opt => { if (completed.includes(opt.value)) opt.remove(); }); }
-
     async function loadQuestions() {
       try {
         const response = await fetch("question.txt");
@@ -206,24 +191,19 @@
         const card = document.createElement("div"); card.className = "card question-card p-3 shadow-sm";
         let html = `<h5 class="fw-bold mb-2">${q.question}</h5>`;
         q.options.forEach(opt => {
-          // Check if the option is a heading
           if (/^(Options:|Conclusions:|Statement:|Input:|Output:|Given:)/i.test(opt)) {
             html += `<p class="fw-bold mb-1">${opt}</p>`;
           }
-          // Check if it is an actual option under "Options:"
           else if (/^a\)|b\)|c\)|d\)/i.test(opt.trim())) {
             html += `<div class="form-check mb-1">
                <input class="form-check-input" type="radio" name="q${index}" value="${opt}" required>
                <label class="form-check-label">${opt}</label>
              </div>`;
           }
-          // Anything else (like conclusions) remain plain text
           else {
             html += `<p class="mb-1">${opt}</p>`;
           }
         });
-
-
         card.innerHTML = html;
         questionsArea.appendChild(card);
       });
@@ -237,7 +217,7 @@
     }
     function showToast(message, success = true) { const toastEl = document.getElementById("submitToast"); const toastBody = document.getElementById("toastMessage"); toastBody.textContent = message; toastEl.classList.remove("text-bg-success", "text-bg-danger"); toastEl.classList.add(success ? "text-bg-success" : "text-bg-danger"); new bootstrap.Toast(toastEl).show(); }
 
-    async function showResult(finalData, save = true) {
+    async function showResult(finalData) {
       document.getElementById("resName").textContent = finalData.fullname;
       document.getElementById("resSuccode").textContent = finalData.succode;
       document.getElementById("resCollege").textContent = finalData.college;
@@ -253,7 +233,6 @@
       document.getElementById("infoForm").classList.add("d-none");
       document.getElementById("examForm").classList.add("d-none");
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-      if (save) { saveResult(finalData); saveCompletedCompany(finalData.company); markCompletedCompanies(); }
     }
 
     async function gradeExam(reason = "") {
@@ -274,7 +253,7 @@
         const json = await resp.json();
         if (json && json.success && json.id) { finalData.id = json.id; showToast(finalData.video ? "✅ Video URL sent successfully!" : "⚠️ No video recorded.", true); } else showToast("❌ Submission failed!", false);
       } catch (err) { console.error(err); showToast("❌ Submission failed!", false); }
-      showResult(finalData, true);
+      showResult(finalData);
     }
 
     document.getElementById("infoForm").addEventListener("submit", async e => {
@@ -302,10 +281,9 @@
     document.getElementById("homeBtn").addEventListener("click", () => {
       if (window._mediaStreamTracks) window._mediaStreamTracks.forEach(track => track.stop());
       window.location.href = "home.html";
-      markCompletedCompanies();
     });
 
-    loadQuestions(); markCompletedCompanies();
+    loadQuestions();
   </script>
 </body>
 
