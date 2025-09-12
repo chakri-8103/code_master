@@ -1,116 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Code Master Brochure</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<style>
-  body {
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
-  }
-  .title-section h1 {
-    font-weight: bold;
-    background: linear-gradient(90deg, #ff416c, #ff4b2b, #ff9933);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 3rem;
-  }
-  .title-section h6 {
-    color: #6c757d;
-    letter-spacing: 1px;
-    font-style: italic;
-  }
-  .section-title {
-    font-weight: bold;
-    color: #ff416c;
-    margin-bottom: 1rem;
-  }
-  .points li {
-    margin-bottom: 0.6rem;
-    line-height: 1.5;
-  }
-  .card {
-    margin-bottom: 1.5rem;
-  }
-  .highlight {
-    color: #007bff;
-    font-weight: bold;
-  }
-  .highlight2 {
-    color: #28a745;
-    font-weight: bold;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Master – Skill Test Brochure</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .title-section h1 {
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff416c, #ff4b2b, #ff9933);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 3rem;
+    }
+
+    .title-section h6 {
+      color: #6c757d;
+      letter-spacing: 1px;
+      font-style: italic;
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #ff416c;
+      margin-bottom: 1rem;
+    }
+
+    .points li {
+      margin-bottom: 0.6rem;
+      line-height: 1.5;
+    }
+
+    .card {
+      border-radius: 15px;
+      margin-bottom: 1.5rem;
+    }
+
+    .highlight {
+      color: #007bff;
+      font-weight: bold;
+    }
+
+    .highlight2 {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .timeline {
+      border-left: 3px solid #ff416c;
+      margin: 20px 0;
+      padding-left: 20px;
+    }
+
+    .timeline-item {
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -11px;
+      top: 5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ff416c;
+    }
+
+    .contact-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .contact-card i {
+      font-size: 2rem;
+      color: #007bff;
+      margin-bottom: 10px;
+    }
+
+    .qr-box {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .qr-box img {
+      max-width: 200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="container py-5">
+  <div class="container py-5">
 
-  <!-- Title -->
-  <div class="text-center mb-5 title-section">
-    <h1>Code Master</h1>
-    <h6>Powered by CDAVIN</h6>
+    <!-- Title -->
+    <div class="text-center mb-5 title-section">
+      <h1><i class="bi bi-journal-code"></i> Code Master</h1>
+      <h6>Powered by CDAVIN</h6>
+      <p class="text-muted">Aptitude • Reasoning • English – For Company Drives & Competitive Exams</p>
+    </div>
+
+    <!-- Highlights -->
+    <div class="card shadow-sm p-4">
+      <h4 class="section-title"><i class="bi bi-stars"></i> Why Join?</h4>
+      <ul class="points">
+        <li><i class="bi bi-check-circle-fill text-success"></i> Improve Aptitude, Reasoning, and English skills.</li>
+        <li><i class="bi bi-building-fill-check text-primary"></i> Prepare for Company Placement Drives.</li>
+        <li><i class="bi bi-mortarboard-fill text-warning"></i> Helpful for Competitive Exams.</li>
+        <li><i class="bi bi-bank text-danger"></i> Strengthen basics for Government Exams.</li>
+      </ul>
+    </div>
+
+    <!-- Company Drive Tests -->
+    <div class="card shadow-sm p-4">
+      <h4 class="section-title"><i class="bi bi-briefcase-fill"></i> Company Drive Preparation Tests</h4>
+      <p>Specially designed test series to match campus placement exam patterns:</p>
+      <ul class="points">
+        <li><i class="bi bi-123"></i> <b>Aptitude</b> – Quantitative, Logical, Puzzles</li>
+        <li><i class="bi bi-braces"></i> <b>Reasoning</b> – Analytical & Logical Thinking</li>
+        <li><i class="bi bi-pencil-square"></i> <b>English</b> – Grammar, Vocabulary</li>
+        <li><i class="bi bi-code-slash"></i> <b>Coding</b> – Basic Programming & Problem Solving</li>
+      </ul>
+      <p>💰 Cost: <span class="highlight">₹49 per company drive test</span></p>
+    </div>
+
+
+    <!-- Weekly Tests -->
+    <div class="card shadow-sm p-4">
+      <h4 class="section-title"><i class="bi bi-calendar-week-fill"></i> Weekly Practice Tests</h4>
+      <p>Stay consistent with weekly topic-based practice:</p>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h6><i class="bi bi-lightbulb-fill text-warning"></i> Monday</h6>
+          <p>New topic released (Aptitude / Reasoning / English).</p>
+        </div>
+        <div class="timeline-item">
+          <h6><i class="bi bi-pencil-fill text-primary"></i> Sunday</h6>
+          <p>Test conducted based on the week’s topic.</p>
+        </div>
+      </div>
+      <p>💰 Cost: <span class="highlight2">₹199 total (all weekly tests included)</span></p>
+    </div>
+
+    <!-- Rules -->
+    <div class="card shadow-sm p-4">
+      <h4 class="section-title"><i class="bi bi-exclamation-triangle-fill"></i> Rules</h4>
+      <ul class="points">
+        <li>Registration is <span class="highlight">mandatory</span> before participating.</li>
+        <li>Use only authorized devices/software.</li>
+        <li>No malpractice – strict action on cheating.</li>
+        <li>Time limits must be followed.</li>
+      </ul>
+    </div>
+
+    <!-- Registration & Payment -->
+    <div class="card shadow-sm p-4">
+      <h4 class="section-title"><i class="bi bi-cash-coin"></i> Registration & Payment</h4>
+      <ul class="points">
+        <li>Weekly Practice Tests: <span class="highlight2">₹199</span></li>
+        <li>Company Drive Tests: <span class="highlight">₹49 each</span></li>
+        <li>UPI Payment via PhonePe, Google Pay, Paytm.</li>
+        <li>Transaction ID must be submitted with in the form.</li>
+      </ul>
+    </div>
+
+    <!-- Contact -->
+    <div class="row g-4 mt-4">
+      <h4 class="section-title text-center"><i class="bi bi-telephone-fill"></i> Contact</h4>
+
+      <div class="col-md-4">
+        <div class="contact-card">
+          <i class="bi bi-person-circle"></i>
+          <h5>Janapaneedi Chakradhar</h5>
+          <p>Email: <span class="highlight">janapaneedichakradhar678@gmail.com</span></p>
+          <p>Phone: <span class="highlight">+91-7981265187</span></p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="contact-card">
+          <i class="bi bi-person-circle"></i>
+          <h5>Prasad</h5>
+          <p>Email: <span class="highlight">prasad@example.com</span></p>
+          <p>Phone: <span class="highlight">+91-9876543210</span></p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="contact-card">
+          <i class="bi bi-person-circle"></i>
+          <h5>Aravind</h5>
+          <p>Email: <span class="highlight">aravind@example.com</span></p>
+          <p>Phone: <span class="highlight">+91-9123456780</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Button -->
+    <div class="text-center mt-4">
+      <button class="btn btn-lg btn-success mt-3" onclick="window.location.href='https://coder-master.vercel.app/'">
+        <i class="bi bi-lightning-charge-fill"></i> Register Now
+      </button>
+    </div>
+
+
   </div>
 
-  <!-- Highlights Section -->
-  <div class="card shadow-sm p-4">
-    <h4 class="section-title">🏆 Highlights</h4>
-    <ul class="points">
-      <li>Competition is open to all students.</li>
-      <!-- <li>Top <span class="highlight2">1 to 30</span> students get Free Access in the final round.</li> -->
-      <li>Multiple rounds with increasing difficulty: Easy → Medium → Hard → Final.</li>
-      <li>Registration is <span class="highlight">mandatory</span>. Fee: <del>₹99</del> <b>₹49</b></li>
-      <li>Retake fee is ₹49 if score is below 60%.</li>
-    </ul>
-  </div>
-
-  <!-- Competition Rounds -->
-  <div class="card shadow-sm p-4">
-    <h4 class="section-title">📋 Competition Rounds</h4>
-    <ul class="points">
-      <li>1️⃣ Easy Round – 10 Questions – 20 mins</li>
-      <li>2️⃣ Medium Round – 10 Questions – 15 mins</li>
-      <li>3️⃣ Hard Round – 10 Questions – 10 mins</li>
-      <li>🏆 Final Round – 20 Questions – 20 mins</li>
-    </ul>
-    <p>Cutoff: <span class="highlight2">60%</span> in each round</p>
-    <p>🗓 Exams: Every Sunday | Topics List: Monday</p>
-  </div>
-
-  <!-- Rules Section -->
-  <div class="card shadow-sm p-4">
-    <h4 class="section-title">⚠️ Rules</h4>
-    <ul class="points">
-      <li>Registration is compulsory before participating.</li>
-      <li>Use only authorized devices and software.</li>
-      <li>Cheating or plagiarism will lead to disqualification.</li>
-      <li>Follow time limits strictly for each round.</li>
-    </ul>
-  </div>
-
-  <!-- Registration & Payment -->
-  <div class="card shadow-sm p-4">
-    <h4 class="section-title">💳 Registration & Payment</h4>
-    <ul class="points">
-      <li>Fill out the registration form after payment.</li>
-      <li>Payment can be made via: PhonePe, Google Pay, Paytm, Amazon Pay.</li>
-      <li>Scan the QR code to complete payment in registeration portal</li>
-      <li>Transaction ID must be submitted in the form.</li>
-    </ul>
-  </div>
-
-  <!-- Contact / Info -->
-  <div class="card shadow-sm p-4 text-center">
-    <h4 class="section-title">📞 Contact</h4>
-    <p>Email: <span class="highlight">janapaneedichakradhar678@gmail.com</span></p>
-    <p>Phone: <span class="highlight">+91-7981265187</span></p>
-    <button class="btn btn-primary mt-3" onclick="window.location.href='index.html'">Register Now</button>
-  </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
