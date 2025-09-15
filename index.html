@@ -63,8 +63,8 @@
 
     <!-- Top Thank You Message -->
     <div id="topMessage" class="alert alert-success w-100 text-center d-none" role="alert">
-  🎉 Payment successful! We will update you within 24 hours.
-</div>
+      🎉 Payment successful! We will update you within 24 hours.
+    </div>
 
 
     <!-- Title Section -->
@@ -77,15 +77,19 @@
     <div id="welcomeCard" class="card shadow-lg p-4 fade-card visible" style="max-width: 650px; width: 100%;">
       <h4 class="mb-3 text-primary fw-bold">Welcome to Code Master</h4>
       <p>📅 Monday → Topic Announced | Sunday → Mock Test</p>
-      <p>Registration is compulsory. Fee: <b>₹199</b></p>
+      <p>Registration is compulsory. Fee: <b>₹199</b> | <span class="fw-bold text-success" id="paymentOfferPrice">Now
+          only ₹99!</span></p>
 
       <div class="mt-3 p-3 bg-light rounded">
         <h6 class="fw-bold mb-2">🔒 Mock Test Rules</h6>
         <ul class="mb-0" style="padding-left: 1.2rem;">
-          <li>Camera & microphone must be enabled during the test.</li>
-          <li>No screenshots allowed.</li>
-          <li>No switching tabs or using other apps during the exam.</li>
+          <li>Registration is <span class="highlight">mandatory</span></li>
+          <li>Follow the given time limit strictly.</li>
+          <li>Use only authorized devices and software.</li>
           <li>Test window must remain active until submission.</li>
+          <li>Stable internet connection is required during the test.</li>
+          <li>Camera and microphone must be enabled; maintain silence during the test.</li>
+          <li>No malpractice – copy/paste, screenshots, or switching tabs is not allowed.</li>
         </ul>
       </div>
 
@@ -134,7 +138,7 @@
     <div id="paymentCard" class="card shadow-lg p-4 fade-card hidden" style="max-width: 500px; width: 100%;">
       <h5 class="text-success mb-3 text-center">Payment</h5>
       <p class="text-success">₹199
-        <!-- <span class="fw-bold text-success" id="paymentOfferPrice">Now only ₹49!</span> -->
+        <span class="fw-bold text-success" id="paymentOfferPrice">Now only ₹99!</span>
       </p>
       <p>Scan QR below to pay:</p>
       <div id="qrSection" class="d-flex justify-content-center mb-3">
